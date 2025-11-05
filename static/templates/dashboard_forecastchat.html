@@ -1,0 +1,816 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Maharashtra Government Portal</title>
+    <link rel="icon" type="image/x-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Maharashtra-gov-logo.png/200px-Maharashtra-gov-logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+                body {
+            background-color: #F5F5F5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(to right, #0066CC, #004C99);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-brand img {
+            height: 40px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+            margin-bottom: 20px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .status-card {
+            text-align: center;
+            padding: 20px;
+        }
+        .status-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+        .open-icon {
+            background-color: #fff4de;
+            color: #fd7e14;
+        }
+        .progress-icon {
+            background-color: #fffce0;
+            color: #ffc107;
+        }
+        .escalated-icon {
+            background-color: #e9f5fe;
+            color: #0d6efd;
+        }
+        .resolved-icon {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        .status-count {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+        .status-label {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+        .table-responsive {
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .table {
+            margin-bottom: 0;
+        }
+        .table th {
+            font-weight: 600;
+            background-color: #0066CC;
+            color: white;
+            vertical-align: middle;
+            padding: 15px 12px;
+        }
+        .table td {
+            vertical-align: middle;
+            padding: 15px 12px;
+        }
+        .table tbody tr:hover {
+            background-color: #f0f0f0;
+        }
+        .btn-action {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            line-height: 36px;
+            text-align: center;
+            border-radius: 50%;
+        }
+        .filter-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .badge-open {
+            background-color: #fd7e14;
+            color: #fff;
+        }
+        .badge-new {
+            background-color: #fd7e14;
+            color: #fff;
+        }
+        .badge-in-progress {
+            background-color: #ffc107;
+            color: #000;
+        }
+        .badge-escalated {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+        .badge-resolved {
+            background-color: #1976d2;
+            color: #fff;
+        }
+        .high-urgency {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .normal-urgency {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+        .low-urgency {
+            color: #6c757d;
+        }
+        .btn-primary {
+            background-color: #0066CC;
+            border-color: #004C99;
+        }
+        .sort-icon {
+            color: rgba(255,255,255,0.7);
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        .language-buttons .lang-button {
+            border: 1px solid white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            transition: all 0.3s ease;
+            line-height: 30px;
+        }
+
+        .language-buttons .lang-button.lang-active {
+            background-color: #EA4335;
+            color: white;
+        }
+
+    </style>
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home2') }}">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-user-circle me-1"></i> Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <!-- Flash Messages from query params -->
+        {% if success_msg %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ success_msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+        {% if error_msg %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ error_msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+        {% if info_msg %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                {{ info_msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+        
+        <!-- Dashboard Title -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Ticket Dashboard</h1>
+            <div>
+                <a href="{{ url_for('send_resolved_emails') }}" class="btn btn-success">
+                    <i class="fas fa-envelope me-1"></i> Send Emails to Resolved Tickets
+                </a>
+                <button class="btn btn-primary ms-2" onclick="window.location.reload();">
+                    <i class="fas fa-sync-alt me-1"></i> Refresh
+                </button>
+            </div>
+        </div>
+        
+        <!-- Status Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card status-card">
+                    <div class="status-icon open-icon">
+                        <i class="fas fa-folder-open fa-lg"></i>
+                    </div>
+                    <h2 class="status-count">{{ new_count }}</h2>
+                    <p class="status-label">New Tickets</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card status-card">
+                    <div class="status-icon progress-icon">
+                        <i class="fas fa-spinner fa-lg"></i>
+                    </div>
+                    <h2 class="status-count">{{ in_progress_count }}</h2>
+                    <p class="status-label">In Progress</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card status-card">
+                    <div class="status-icon escalated-icon">
+                        <i class="fas fa-exclamation-triangle fa-lg"></i>
+                    </div>
+                    <h2 class="status-count">{{ escalated_count }}</h2>
+                    <p class="status-label">Escalated</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card status-card">
+                    <div class="status-icon resolved-icon">
+                        <i class="fas fa-check-circle fa-lg"></i>
+                    </div>
+                    <h2 class="status-count">{{ resolved_count }}</h2>
+                    <p class="status-label">Resolved</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h5 class="mb-3"><i class="fas fa-filter me-2"></i>Filter Tickets</h5>
+            <form method="GET" action="{{ url_for('dashboard') }}" class="row g-3">
+                <input type="hidden" id="selectedLanguage" name="lang" value="{{ selected_lang }}">
+                <div class="col-md-2">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" name="category">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" name="status">
+                        <option value="">All Statuses</option>
+                        <option value="New" {% if selected_status == 'New' %}selected{% endif %}>New</option>
+                        <option value="Open" {% if selected_status == 'Open' %}selected{% endif %}>Open</option>
+                        <option value="In-Progress" {% if selected_status == 'In Progress' or selected_status == 'In-Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Escalated" {% if selected_status == 'Escalated' %}selected{% endif %}>Escalated</option>
+                        <option value="Resolved" {% if selected_status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Priority</label>
+                    <select class="form-select" name="priority">
+                        <option value="">All</option>
+                        <option value="Low" {% if selected_priority == 'Low' or selected_urgency == 'Low' %}selected{% endif %}>Low</option>
+                        <option value="Normal" {% if selected_priority == 'Normal' or selected_urgency == 'Normal' %}selected{% endif %}>Normal</option>
+                        <option value="High" {% if selected_priority == 'High' or selected_urgency == 'High' %}selected{% endif %}>High</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Assigned To</label>
+                    <select class="form-select" name="agent">
+                        <option value="">All Agents</option>
+                        {% for category, agents in agents_by_category.items() %}
+                            {% for agent in agents %}
+                                <option value="{{ agent }}" {% if selected_agent == agent %}selected{% endif %}>{{ agent }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">From Date</label>
+                    <input type="date" class="form-control" name="date_from" value="{{ date_from }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">To Date</label>
+                    <input type="date" class="form-control" name="date_to" value="{{ date_to }}">
+                </div>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i> Apply Filters
+                    </button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                        <i class="fas fa-times me-1"></i> Clear Filters
+                    </a>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Tickets Table -->
+        <div class="table-responsive">
+            <table class="table table-hover" id="ticketsTable">
+                <thead>
+                    <tr>
+                        <th>Request ID <span class="sort-icon"></span></th>
+                        <th>Service Category <span class="sort-icon"></span></th>
+                        <th>Sub-Category <span class="sort-icon"></span></th>
+                        <th>District <span class="sort-icon"></span></th>
+                        <th>Area <span class="sort-icon"></span></th>
+                        <th>Priority <span class="sort-icon"></span></th>
+                        <th>Email <span class="sort-icon"></span></th>
+                        <th>Created At <span class="sort-icon"></span></th>
+                        <th>Status <span class="sort-icon"></span></th>
+                        <th>Worker Assigned <span class="sort-icon"></span></th>
+                        <th>Department <span class="sort-icon"></span></th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>{{ ticket.Request_ID or 'N/A' }}</td>
+                        <td>{{ ticket.Service_Category or 'N/A' }}</td>
+                        <td>{{ ticket.Sub_Category or 'N/A' }}</td>
+                        <td>{{ ticket.District or 'N/A' }}</td>
+                        <td>{{ ticket.Area or 'N/A' }}</td>
+                        <td class="{% if ticket.Priority == 'High' %}high-urgency{% elif ticket.Priority == 'Normal' %}normal-urgency{% else %}low-urgency{% endif %}">
+                            {{ ticket.Priority or 'N/A' }}
+                        </td>
+                        <td>{{ ticket.Email_ID or 'N/A' }}</td>
+                        <td>
+                            {% if ticket.Created_Timestamp %}
+                                {{ ticket.Created_Timestamp.strftime('%Y-%m-%d %H:%M') }}
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if ticket.Status %}
+                                <span class="badge {% if ticket.Status == 'New' or ticket.Status == 'Open' %}badge-new{% elif ticket.Status == 'In Progress' or ticket.Status == 'In-Progress' %}badge-in-progress{% elif ticket.Status == 'Escalated' %}badge-escalated{% elif ticket.Status == 'Resolved' %}badge-resolved{% else %}badge-secondary{% endif %}">
+                                    {{ ticket.Status }}
+                                </span>
+                            {% else %}
+                                <span class="badge badge-secondary">Not Set</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ ticket.Worker_Assigned or 'Not Assigned' }}</td>
+                        <td>{{ ticket.Assigned_Department or 'N/A' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal{{ ticket.Request_ID }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            
+                            <!-- Update Modal -->
+                            <div class="modal fade" id="updateModal{{ ticket.Request_ID }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Update Request #{{ ticket.Request_ID or 'N/A' }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form method="POST" action="{{ url_for('update_ticket') }}">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="ticket_id" value="{{ ticket.Request_ID or '' }}">
+                                                
+                                                <div class="mb-3">
+                                                    <label class="form-label">Status</label>
+                                                    <select class="form-select" name="status" required>
+                                                        <option value="New" {% if ticket.Status == 'New' %}selected{% endif %}>New</option>
+                                                        <option value="Open" {% if ticket.Status == 'Open' %}selected{% endif %}>Open</option>
+                                                        <option value="In-Progress" {% if ticket.Status == 'In Progress' or ticket.Status == 'In-Progress' %}selected{% endif %}>In Progress</option>
+                                                        <option value="Escalated" {% if ticket.Status == 'Escalated' %}selected{% endif %}>Escalated</option>
+                                                        <option value="Resolved" {% if ticket.Status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label class="form-label">Assign To Worker</label>
+                                                    <select class="form-select" name="assigned_agent" id="agentSelect{{ ticket.Request_ID }}">
+                                                        <option value="">-- Select Worker --</option>
+                                                        {% for agent in all_agents %}
+                                                            <option value="{{ agent }}" {% if ticket.Worker_Assigned == agent %}selected{% endif %}>{{ agent }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label class="form-label">Assigned Department</label>
+                                                    <input type="text" class="form-control" name="assigned_department" value="{{ ticket.Assigned_Department or '' }}" placeholder="Enter department name">
+                                                </div>
+                                                
+                                                <div class="ticket-details">
+                                                    <h6>Request Details:</h6>
+                                                    <p><strong>Service Category:</strong> {{ ticket.Service_Category or 'N/A' }}</p>
+                                                    <p><strong>Sub-Category:</strong> {{ ticket.Sub_Category or 'N/A' }}</p>
+                                                    <p><strong>District:</strong> {{ ticket.District or 'N/A' }}</p>
+                                                    <p><strong>Area:</strong> {{ ticket.Area or 'N/A' }}</p>
+                                                    <p><strong>Priority:</strong> {{ ticket.Priority or 'N/A' }}</p>
+                                                    <p><strong>Email:</strong> {{ ticket.Email_ID or 'N/A' }}</p>
+                                                    <p><strong>Created At:</strong> 
+                                                        {% if ticket.Created_Timestamp %}
+                                                            {{ ticket.Created_Timestamp.strftime('%Y-%m-%d %H:%M') }}
+                                                        {% else %}
+                                                            N/A
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Language content dictionary for dashboard
+        const languageContent = {
+            en: {
+                title: 'Dashboard - Citizen Ticket System',
+                dashboardTitle: 'Ticket Dashboard',
+                navItems: {
+                    admin: 'Admin',
+                    logout: 'Logout'
+                },
+                sendEmailsButton: 'Send Emails to Resolved Tickets',
+                refreshButton: 'Refresh',
+                filterTitle: 'Filter Tickets',
+                filterCategory: 'Category',
+                filterAllCategories: 'All Categories',
+                filterStatus: 'Status',
+                filterAllStatuses: 'All Statuses',
+                filterStatusOptions: {
+                    new: 'New',
+                    open: 'Open',
+                    inProgress: 'In Progress',
+                    escalated: 'Escalated',
+                    resolved: 'Resolved'
+                },
+                filterPriority: 'Priority',
+                filterPriorityOptions: {
+                    all: 'All',
+                    low: 'Low',
+                    normal: 'Normal',
+                    high: 'High'
+                },
+                filterUrgency: 'Urgency',  // Keep for backward compatibility
+                filterUrgencyOptions: {
+                    all: 'All',
+                    low: 'Low',
+                    normal: 'Normal',
+                    high: 'High'
+                },
+                filterAssignedTo: 'Assigned To',
+                filterAllAgents: 'All Agents',
+                filterFromDate: 'From Date',
+                filterToDate: 'To Date',
+                filterApplyButton: 'Apply Filters',
+                filterClearButton: 'Clear Filters',
+                tableHeaders: [
+                    'Request ID', 'Service Category', 'Sub-Category', 'District', 'Area',
+                    'Priority', 'Email', 'Created At', 'Status', 
+                    'Worker Assigned', 'Department', 'Actions'
+                ],
+                tableUrgency: {
+                    high: 'High',
+                    normal: 'Normal',
+                    low: 'Low'
+                },
+                modalTitle: 'Update Ticket',
+                modalTicketDetails: 'Ticket Details',
+                modalDetailsLabels: {
+                    serviceCategory: 'Service Category',
+                    subCategory: 'Sub-Category',
+                    district: 'District',
+                    area: 'Area',
+                    priority: 'Priority'
+                },
+                modalStatus: 'Status',
+                modalStatusOptions: {
+                    new: 'New',
+                    open: 'Open',
+                    inProgress: 'In Progress',
+                    escalated: 'Escalated',
+                    resolved: 'Resolved'
+                },
+                modalAssignAgent: 'Assign To Agent',
+                modalSelectAgent: '-- Select Agent --',
+                modalClose: 'Close',
+                modalSaveChanges: 'Save Changes'
+            },
+            fr: {
+                title: 'Tableau de Bord - Système de Tickets Citoyens',
+                dashboardTitle: 'Tableau de Bord des Tickets',
+                navItems: {
+                    admin: 'Admin',
+                    logout: 'Déconnexion'
+                },
+                sendEmailsButton: 'Envoyer des Emails aux Tickets Résolus',
+                refreshButton: 'Actualiser',
+                filterTitle: 'Filtrer les Tickets',
+                filterCategory: 'Catégorie',
+                filterAllCategories: 'Toutes Catégories',
+                filterStatus: 'Statut',
+                filterAllStatuses: 'Tous Statuts',
+                filterStatusOptions: {
+                    new: 'Nouveau',
+                    open: 'Ouvert',
+                    inProgress: 'En Cours',
+                    escalated: 'Escaladé',
+                    resolved: 'Résolu'
+                },
+                filterPriority: 'Priorité',
+                filterPriorityOptions: {
+                    all: 'Tous',
+                    low: 'Faible',
+                    normal: 'Normale',
+                    high: 'Élevée'
+                },
+                filterUrgency: 'Urgence',  // Keep for backward compatibility
+                filterUrgencyOptions: {
+                    all: 'Tous',
+                    low: 'Faible',
+                    normal: 'Normale',
+                    high: 'Élevée'
+                },
+                filterAssignedTo: 'Assigné à',
+                filterAllAgents: 'Tous Agents',
+                filterFromDate: 'De la Date',
+                filterToDate: 'Jusqu\'à la Date',
+                filterApplyButton: 'Appliquer les Filtres',
+                filterClearButton: 'Effacer les Filtres',
+                tableHeaders: [
+                    'ID de Demande', 'Catégorie de Service', 'Sous-Catégorie', 'District', 'Zone',
+                    'Priorité', 'E-mail', 'Créé le', 'Statut', 
+                    'Travailleur Assigné', 'Département', 'Actes'
+                ],
+                tableUrgency: {
+                    high: 'Élevée',
+                    normal: 'Normale',
+                    low: 'Faible'
+                },
+                modalTitle: 'Mettre à Jour le Ticket',
+                modalTicketDetails: 'Détails du Ticket',
+                modalDetailsLabels: {
+                    serviceCategory: 'Catégorie de Service',
+                    subCategory: 'Sous-Catégorie',
+                    district: 'District',
+                    area: 'Zone',
+                    priority: 'Priorité'
+                },
+                modalStatus: 'Statut',
+                modalStatusOptions: {
+                    new: 'Nouveau',
+                    open: 'Ouvert',
+                    inProgress: 'En Cours',
+                    escalated: 'Escaladé',
+                    resolved: 'Résolu'
+                },
+                modalAssignAgent: 'Assigner à un Agent',
+                modalSelectAgent: '-- Sélectionner Agent --',
+                modalClose: 'Fermer',
+                modalSaveChanges: 'Enregistrer'
+            }
+        };
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            const enLangButton = document.getElementById('enLangButton');
+            const frLangButton = document.getElementById('frLangButton');
+            const langInput = document.getElementById('selectedLanguage');
+
+    // Get initial language from server or sessionStorage
+    let currentLang = '{{ selected_lang }}' || sessionStorage.getItem('selectedLang') || 'en';
+
+
+    
+            function updateLanguage(lang) {
+                currentLang = lang;
+        sessionStorage.setItem('selectedLang', lang);
+        langInput.value = lang;
+                // Update page title
+                document.title = languageContent[lang].title;
+    
+                // Update nav items
+                const navItems = document.querySelectorAll('.navbar-nav .nav-link');
+                navItems[0].innerHTML = `<i class="fas fa-user-circle me-1"></i> ${languageContent[lang].navItems.admin}`;
+                navItems[1].innerHTML = `<i class="fas fa-sign-out-alt me-1"></i> ${languageContent[lang].navItems.logout}`;
+    
+                // Update dashboard title
+                document.querySelector('h1').textContent = languageContent[lang].dashboardTitle;
+    
+                // Update buttons
+                const sendEmailsButton = document.querySelector('a.btn-success');
+                sendEmailsButton.innerHTML = `<i class="fas fa-envelope me-1"></i> ${languageContent[lang].sendEmailsButton}`;
+    
+                const refreshButton = document.querySelector('button.btn-primary');
+                refreshButton.innerHTML = `<i class="fas fa-sync-alt me-1"></i> ${languageContent[lang].refreshButton}`;
+    
+                // Update filter section
+                const filterTitle = document.querySelector('.filter-section h5');
+                filterTitle.innerHTML = `<i class="fas fa-filter me-2"></i>${languageContent[lang].filterTitle}`;
+    
+                // Update filter labels
+                const labels = document.querySelectorAll('.filter-section label');
+                labels[0].textContent = languageContent[lang].filterCategory;
+                labels[1].textContent = languageContent[lang].filterStatus;
+                labels[2].textContent = languageContent[lang].filterPriority || languageContent[lang].filterUrgency;
+                labels[3].textContent = languageContent[lang].filterAssignedTo;
+                labels[4].textContent = languageContent[lang].filterFromDate;
+                labels[5].textContent = languageContent[lang].filterToDate;
+    
+                // Update category dropdown
+                const categorySelect = document.querySelector('select[name="category"]');
+                const firstCategoryOption = categorySelect.querySelector('option');
+                firstCategoryOption.textContent = languageContent[lang].filterAllCategories;
+    
+                // Update status dropdown
+                const statusSelect = document.querySelector('select[name="status"]');
+                statusSelect.innerHTML = `
+                    <option value="">${languageContent[lang].filterAllStatuses}</option>
+                    <option value="New">${languageContent[lang].filterStatusOptions.new}</option>
+                    <option value="Open">${languageContent[lang].filterStatusOptions.open}</option>
+                    <option value="In Progress">${languageContent[lang].filterStatusOptions.inProgress}</option>
+                    <option value="Escalated">${languageContent[lang].filterStatusOptions.escalated}</option>
+                    <option value="Resolved">${languageContent[lang].filterStatusOptions.resolved}</option>
+                `;
+    
+                // Update priority dropdown
+                const prioritySelect = document.querySelector('select[name="priority"]');
+                if (prioritySelect) {
+                    const priorityOptions = languageContent[lang].filterPriorityOptions || languageContent[lang].filterUrgencyOptions;
+                    prioritySelect.innerHTML = `
+                        <option value="">${priorityOptions.all}</option>
+                        <option value="Low">${priorityOptions.low}</option>
+                        <option value="Normal">${priorityOptions.normal}</option>
+                        <option value="High">${priorityOptions.high}</option>
+                    `;
+                }
+                
+                // Also update urgency dropdown if it exists (for backward compatibility)
+                const urgencySelect = document.querySelector('select[name="urgency"]');
+                if (urgencySelect) {
+                    urgencySelect.innerHTML = `
+                        <option value="">${languageContent[lang].filterUrgencyOptions.all}</option>
+                        <option value="Low">${languageContent[lang].filterUrgencyOptions.low}</option>
+                        <option value="Normal">${languageContent[lang].filterUrgencyOptions.normal}</option>
+                        <option value="High">${languageContent[lang].filterUrgencyOptions.high}</option>
+                    `;
+                }
+    
+                // Update agent dropdown
+                const agentSelect = document.querySelector('select[name="agent"]');
+                const firstAgentOption = agentSelect.querySelector('option');
+                firstAgentOption.textContent = languageContent[lang].filterAllAgents;
+    
+                // Update filter buttons
+                const filterButtons = document.querySelectorAll('.filter-section .btn');
+                filterButtons[0].innerHTML = `<i class="fas fa-search me-1"></i> ${languageContent[lang].filterApplyButton}`;
+                filterButtons[1].innerHTML = `<i class="fas fa-times me-1"></i> ${languageContent[lang].filterClearButton}`;
+    
+                // Update table headers
+                const tableHeaders = document.querySelectorAll('#ticketsTable thead th');
+                tableHeaders.forEach((header, index) => {
+                    header.childNodes[0].textContent = languageContent[lang].tableHeaders[index];
+                });
+    
+                // Update table rows
+                const tableRows = document.querySelectorAll('#ticketsTable tbody tr');
+                tableRows.forEach(row => {
+                    // Update priority column (now 6th column)
+                    const priorityCell = row.querySelector('td:nth-child(6)');
+                    if (priorityCell) {
+                        const priorityText = priorityCell.textContent.trim();
+                        if (priorityText === 'High') {
+                            priorityCell.textContent = languageContent[lang].tableUrgency.high;
+                        } else if (priorityText === 'Normal') {
+                            priorityCell.textContent = languageContent[lang].tableUrgency.normal;
+                        } else if (priorityText === 'Low') {
+                            priorityCell.textContent = languageContent[lang].tableUrgency.low;
+                        }
+                    }
+
+                    // Update status column (now 9th column)
+                    const statusCell = row.querySelector('td:nth-child(9) .badge');
+                    if (statusCell) {
+                        const statusText = statusCell.textContent.trim();
+                        if (statusText === 'New' || statusText === 'Nouveau') {
+                            statusCell.textContent = languageContent[lang].filterStatusOptions.new;
+                        } else if (statusText === 'Open' || statusText === 'Ouvert') {
+                            statusCell.textContent = languageContent[lang].filterStatusOptions.open;
+                        } else if (statusText === 'In Progress' || statusText === 'En Cours') {
+                            statusCell.textContent = languageContent[lang].filterStatusOptions.inProgress;
+                        } else if (statusText === 'Escalated' || statusText === 'Escaladé') {
+                            statusCell.textContent = languageContent[lang].filterStatusOptions.escalated;
+                        } else if (statusText === 'Resolved' || statusText === 'Résolu') {
+                            statusCell.textContent = languageContent[lang].filterStatusOptions.resolved;
+                        }
+                    }
+                });
+    
+                // Update modals
+                document.querySelectorAll('.modal-title').forEach(title => {
+                    title.textContent = languageContent[lang].modalTitle;
+                });
+    
+                // Update modal labels
+                const modalLabels = document.querySelectorAll('.modal label');
+                modalLabels[0].textContent = languageContent[lang].modalStatus;
+                modalLabels[1].textContent = languageContent[lang].modalAssignAgent;
+    
+                // Update modal status dropdown
+                document.querySelectorAll('.modal select[name="status"]').forEach(select => {
+                    const currentValue = select.value; // Preserve current selection
+                    select.innerHTML = `
+                        <option value="New">${languageContent[lang].modalStatusOptions.new}</option>
+                        <option value="Open">${languageContent[lang].modalStatusOptions.open}</option>
+                        <option value="In Progress">${languageContent[lang].modalStatusOptions.inProgress}</option>
+                        <option value="Escalated">${languageContent[lang].modalStatusOptions.escalated}</option>
+                        <option value="Resolved">${languageContent[lang].modalStatusOptions.resolved}</option>
+                    `;
+                    select.value = currentValue; // Restore selection
+                });
+    
+                // Update modal agent dropdown
+                const modalAgentSelects = document.querySelectorAll('.modal select[name="assigned_agent"]');
+                modalAgentSelects.forEach(select => {
+                    const firstOption = select.querySelector('option');
+                    firstOption.textContent = languageContent[lang].modalSelectAgent;
+                });
+    
+                // Update ticket details in modal
+                document.querySelectorAll('.ticket-details h6').forEach(h6 => {
+                    h6.textContent = languageContent[lang].modalTicketDetails;
+                });
+    
+                const ticketDetailLabels = document.querySelectorAll('.ticket-details p strong');
+                if (ticketDetailLabels.length >= 5) {
+                    ticketDetailLabels[0].textContent = languageContent[lang].modalDetailsLabels.serviceCategory + ':';
+                    ticketDetailLabels[1].textContent = languageContent[lang].modalDetailsLabels.subCategory + ':';
+                    ticketDetailLabels[2].textContent = languageContent[lang].modalDetailsLabels.district + ':';
+                    ticketDetailLabels[3].textContent = languageContent[lang].modalDetailsLabels.area + ':';
+                    ticketDetailLabels[4].textContent = languageContent[lang].modalDetailsLabels.priority + ':';
+                }
+    
+                // Update modal buttons
+                const modalCloseButtons = document.querySelectorAll('.modal .btn-secondary');
+                modalCloseButtons.forEach(button => {
+                    button.textContent = languageContent[lang].modalClose;
+                });
+    
+                const modalSubmitButtons = document.querySelectorAll('.modal .btn-primary');
+                modalSubmitButtons.forEach(button => {
+                    if (button.textContent.includes('Save Changes')) {
+                        button.textContent = languageContent[lang].modalSaveChanges;
+                    }
+                });
+    
+                // Update language button states
+                enLangButton.classList.toggle('lang-active', lang === 'en');
+                frLangButton.classList.toggle('lang-active', lang === 'fr');
+            }
+    
+            // Initial language setup
+            if (currentLang) {
+        updateLanguage(currentLang);
+    }
+    
+            // Modify the language button click handlers
+enLangButton.addEventListener('click', () => {
+    updateLanguage('en');
+    // Submit the form to preserve filters
+    document.querySelector('.filter-section form').submit();
+});
+
+frLangButton.addEventListener('click', () => {
+    updateLanguage('fr');
+    // Submit the form to preserve filters
+    document.querySelector('.filter-section form').submit();
+});
+        });
+    </script>
+</body>
+</html>

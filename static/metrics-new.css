@@ -1,0 +1,337 @@
+/* New Metrics Page Styles */
+
+.district-selection-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 32px;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+}
+
+.selection-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.selection-label {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.metrics-district-dropdown {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333333;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.metrics-district-dropdown:hover {
+    background: #ffffff;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.metrics-district-dropdown:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+.calculate-btn {
+    padding: 16px 32px;
+    background: #ffffff;
+    color: #667eea;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.calculate-btn:hover:not(:disabled) {
+    background: #f0f0ff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+}
+
+.calculate-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.calculate-btn:disabled {
+    background: rgba(255, 255, 255, 0.5);
+    color: rgba(102, 126, 234, 0.5);
+    cursor: not-allowed;
+}
+
+/* Metrics Info Section */
+.metrics-info-section {
+    margin-bottom: 40px;
+}
+
+.info-section-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333333;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.metrics-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.info-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+
+.info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: #667eea;
+}
+
+.info-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.priority-icon {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: #ffffff;
+}
+
+.health-icon {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    color: #ffffff;
+}
+
+.infrastructure-icon {
+    background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+    color: #ffffff;
+}
+
+.resource-icon {
+    background: linear-gradient(135deg, #7b1fa2 0%, #6a1b9a 100%);
+    color: #ffffff;
+}
+
+.equity-icon {
+    background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+    color: #ffffff;
+}
+
+.info-card h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.info-subtitle {
+    font-size: 14px;
+    color: #999999;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.info-description {
+    font-size: 15px;
+    color: #666666;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.info-formula {
+    font-size: 13px;
+    color: #667eea;
+    font-weight: 600;
+    padding: 10px 14px;
+    background: #f0f4ff;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+/* Results Section */
+.metrics-results-section {
+    margin-top: 40px;
+}
+
+.results-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #333333;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.results-title span {
+    color: #667eea;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.result-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 24px;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.result-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+    margin-bottom: 12px;
+}
+
+.result-value {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.result-label {
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+.recommendations-section,
+.issues-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.recommendations-section h3,
+.issues-section h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333333;
+    margin-bottom: 16px;
+}
+
+.recommendations-list,
+.issues-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recommendations-list li,
+.issues-list li {
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    background: #ffffff;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    font-size: 15px;
+    color: #333333;
+    line-height: 1.5;
+}
+
+.issues-list li {
+    border-left-color: #dc3545;
+}
+
+/* Loading State */
+.calculating-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.calculating-spinner {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px 60px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.spinner-icon {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #e9ecef;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.calculating-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .metrics-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .selection-card {
+        padding: 24px;
+    }
+}
+

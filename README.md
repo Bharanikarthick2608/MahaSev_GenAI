@@ -1,1 +1,1 @@
-# MahaSev_GenAI
+# MahaSeva

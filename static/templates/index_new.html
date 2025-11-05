@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maharashtra Government Citizen Support Agent</title>
+    <link rel="icon" type="image/x-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Maharashtra-gov-logo.png/200px-Maharashtra-gov-logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Violet/Purple theme color palette to match navigation bar */
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #764ba2;
+            --background-color: #F5F5F5;
+            --text-color: #1a1a1a;
+            --light-text: #fff;
+        }
+ 
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container */
+        .chatbot-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+ 
+        /* Header Styles - Modern Professional */
+        .header-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 24px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #ffffff;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .chatbot-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chatbot-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            color: #ffffff;
+        }
+
+        /* Modern Message Bubbles */
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
+        }
+ 
+        .chat-bubble {
+            max-width: 75%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            line-height: 1.5;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 15px;
+        }
+ 
+        .user-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+ 
+        .bot-bubble {
+            background: #ffffff;
+            color: #333333;
+            border: 1px solid #e9ecef;
+            border-bottom-left-radius: 4px;
+        }
+ 
+        /* Chat Container - Professional */
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: #f8f9fa;
+            min-height: 0;
+            overflow-x: hidden;
+        }
+
+        #chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        #chat-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        #chat-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Welcome Message */
+        .welcome-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666666;
+        }
+
+        .welcome-icon {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .welcome-message h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #333333;
+        }
+
+        .welcome-message p {
+            font-size: 15px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+ 
+        /* Language and Audio Buttons - Modern */
+        .lang-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .lang-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+ 
+        .lang-active {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+ 
+        .audio-active {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+ 
+        /* Category Buttons */
+        .category-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            margin: 0.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .category-button:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: scale(1.05);
+        }
+ 
+        .full-width-header {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 0;
+        }
+        
+        footer {
+            width: 100%;
+            margin-top: auto;
+            padding: 2rem 0;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            box-sizing: border-box;
+        }
+ 
+        .footer-content {
+            width: 100%;
+            padding: 0 1rem;
+            margin: 0 auto;
+        }
+        
+        .header-container {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            width: 100%;
+            padding: 0 1rem;
+        }
+ 
+        .full-width-header a {
+            color: white;
+            margin: 0 0.75rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .full-width-header a:hover {
+            color: #fbbf24;
+        }
+ 
+        .header-logo {
+            margin-left: -40px;
+            max-height: 40px;
+            margin-right: 1rem;
+            border-radius: 10px;
+        }
+        
+        .header-logo-container {
+            display: flex;
+            align-items: center;
+            margin-left: -0.5rem;
+        }
+ 
+        .header-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+ 
+        .language-buttons .lang-button {
+            border: 1px solid white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            transition: all 0.3s ease;
+        }
+ 
+        .language-buttons .lang-button.lang-active {
+            background-color: #EA4335;
+            color: white;
+        }
+        
+        .social-icons-container {
+            background-color: #ffffff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+        }
+       
+        .social-icons a {
+            color: #667eea;
+            margin: 0 0.25rem;
+            transition: transform 0.2s ease;
+        }
+       
+        .social-icons a:hover {
+            transform: scale(1.2);
+        }
+       
+        .header-menu-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+        }
+       
+        .header-menu-container a {
+            margin: 0 0.75rem;
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+       
+        .header-menu-container a:hover {
+            color: #ffbb00;
+        }  
+ 
+        .loading-dots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .loading-dots div {
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            border-radius: 50%;
+            background-color: #667eea;
+            animation: typing 1.4s infinite;
+        }
+        
+        .loading-dots div:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .loading-dots div:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 80%, 100% {
+                opacity: 0.5;
+                transform: scale(0.7);
+            }
+            40% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* RTL support styles */
+        [dir="rtl"] {
+            text-align: right;
+        }
+
+        [dir="rtl"] .user-bubble {
+            margin-right: auto;
+            margin-left: 0;
+            border-bottom-left-radius: 0.25rem;
+            border-bottom-right-radius: 0.75rem;
+        }
+
+        [dir="rtl"] .bot-bubble {
+            margin-left: auto;
+            margin-right: 0;
+            border-bottom-right-radius: 0.25rem;
+            border-bottom-left-radius: 0.75rem;
+        }
+
+        [dir="rtl"] #user-input {
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        [dir="rtl"] #send-button {
+            border-radius: 0.5rem 0 0 0.5rem;
+        }
+
+        [dir="rtl"] .header-logo {
+            margin-right: 0;
+            margin-left: 1rem;
+        }
+
+        [dir="rtl"] .language-buttons {
+            flex-direction: row-reverse;
+        }
+
+        .stop-button {
+            width: 40px;
+            padding: 8px;
+            background-color: red;
+            color: white;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chatbot-container {
+                padding: 12px;
+            }
+
+            .header-gradient {
+                padding: 20px;
+            }
+            
+            .chatbot-title {
+                font-size: 22px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .chat-wrapper {
+                height: calc(100vh - 250px);
+                min-height: 400px;
+            }
+            
+            .chat-bubble {
+                max-width: 85%;
+            }
+            
+            .input-wrapper {
+                flex-wrap: wrap;
+            }
+
+            #mic-button, #audioToggle, #send-button {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        
+        /* Chat Wrapper - Professional */
+        .chat-wrapper {
+                display: flex;
+                flex-direction: column;
+            height: calc(100vh - 300px);
+            min-height: 500px;
+            max-height: calc(100vh - 300px);
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            }
+            
+        /* Input Section - Modern */
+        .chat-input-section {
+            border-top: 1px solid #e9ecef;
+            padding: 16px 24px;
+            background: #ffffff;
+            flex-shrink: 0;
+            display: block !important;
+            visibility: visible !important;
+            position: relative;
+            z-index: 10;
+                width: 100%;
+            box-sizing: border-box;
+            }
+
+        .input-wrapper {
+            display: flex !important;
+            gap: 12px;
+            align-items: flex-end;
+            visibility: visible !important;
+            }
+            
+            #user-input {
+                flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 24px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: none;
+            max-height: 120px;
+            transition: all 0.2s;
+            background: #f8f9fa;
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        #user-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        #send-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            visibility: visible !important;
+        }
+
+        #send-button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        #send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #mic-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            color: #667eea;
+            cursor: pointer;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            visibility: visible !important;
+        }
+
+        #mic-button:hover {
+            background: #e9ecef;
+            transform: scale(1.05);
+        }
+
+        #audioToggle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            color: #667eea;
+            cursor: pointer;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            visibility: visible !important;
+        }
+
+        #audioToggle:hover {
+            background: #e9ecef;
+            transform: scale(1.05);
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: #999999;
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        /* Loading Indicator */
+        .loading-message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            font-size: 14px;
+            padding: 14px 18px;
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #e9ecef;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .loading-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        /* Main Content - Full Width */
+            .main-content {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            }
+
+        .app-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .toggle-switch input[type="checkbox"] {
+            display: none;
+        }
+
+        .toggle-switch-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ddd;
+            border-radius: 20px;
+            box-shadow: inset 0 0 0 2px #ccc;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .toggle-switch-handle {
+            position: absolute;
+            top: 3px; /* Adjusted for a smaller vertical position */
+            left: 3px; /* Adjusted for a smaller horizontal position */
+            width: 24px; /* Reduced width */
+            height: 24px; /* Reduced height */
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .toggle-switch::before {
+            content: "";
+            position: absolute;
+            top: -25px;
+            right: -35px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #aaa;
+            text-shadow: 1px 1px #fff;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .toggle-switch input[type="checkbox"]:checked + .toggle-switch-handle {
+            transform: translateX(45px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 0 3px #05c46b;
+        }
+
+        .toggle-switch input[type="checkbox"]:checked + .toggle-switch-background {
+            background-color: #05c46b;
+            box-shadow: inset 0 0 0 2px #04b360;
+        }
+
+        .toggle-switch input[type="checkbox"]:checked + .toggle-switch::before {
+            content: "On";
+            color: #05c46b;
+            right: -15px;
+        }
+
+        .toggle-switch input[type="checkbox"]:checked + .toggle-switch-background .toggle-switch-handle {
+            transform: translateX(20px);
+        }
+
+        .concise-mode-label {
+            font-size: 20px; /* Increase the font size as needed */
+            margin-top: 2px; /* Adjust the vertical position */
+            color: white; /* Ensure the text color is white for visibility */
+        }
+
+        /* Modal Styles */
+        .modal-content {
+            max-width: 400px; /* Set a max width for the modal */
+            width: 90%; /* Responsive width */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            transition: transform 0.3s ease; /* Smooth transition */
+        }
+
+        /* Button Styles */
+        .modern-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Violet/purple gradient */
+            color: white; /* White text */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            font-weight: bold; /* Bold text */
+            cursor: pointer; /* Pointer cursor */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition */
+        }
+
+        .modern-button:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%); /* Reversed gradient on hover */
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+    </style>
+</head>
+ 
+<body>
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+    <!-- New Full-Width Header -->
+    <div class="full-width-header">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="{{ url_for('home2') }}">
+
+                </a>
+                <span class="text-lg font-semibold" id="header-title"></span>
+            </div>
+           
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-button" class="mobile-menu-button text-white">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            
+            <!-- Change Language Button -->
+            <div class="flex justify-end mt-2">
+
+            </div>
+        </div>
+        
+        <!-- Mobile language buttons (shown below menu) -->
+        <!-- <div class="language-buttons flex justify-center mt-2 md:hidden">
+            <button id="enLangButtonMobile" class="lang-button px-2 py-1 mx-1">
+                EN
+            </button>
+            <button id="arLangButtonMobile" class="lang-button px-2 py-1 mx-1 lang-active">
+                العربية
+            </button>
+        </div> -->
+    </div>
+   
+    <div class="chatbot-container">
+        <!-- Header -->
+        <header class="header-gradient">
+            <div class="header-content">
+                <div>
+                    <h1 class="chatbot-title">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle;">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <a href="/dashboard" style="color: white; text-decoration: none; margin-right: 16px;" title="Back to Dashboard">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </a>
+                        Citizen Support Agent
+                    </h1>
+                    <p class="chatbot-subtitle">Multilingual AI-powered citizen support chatbot for Maharashtra Government services</p>
+                    </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button id="change-language-button" class="lang-button">
+                        <i class="fas fa-language"></i>
+                        Change Language
+                    </button>
+                    <button id="stop-button" class="lang-button" style="background: rgba(255, 255, 255, 0.2);">
+                        <i class="fas fa-stop"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+       
+        <!-- Chat Wrapper -->
+        <div class="chat-wrapper">
+            <div id="chat-container">
+                <div class="welcome-message">
+                    <div class="welcome-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <h2>Welcome to Citizen Support</h2>
+                    <p>I'm here to help you with Maharashtra Government services. I can assist you in multiple languages!</p>
+                    <p>Ask me anything about:</p>
+                    <ul style="text-align: left; max-width: 500px; margin: 20px auto; list-style: none; padding: 0;">
+                        <li style="padding: 8px 0; padding-left: 24px; position: relative;">
+                            <span style="position: absolute; left: 0; color: #667eea; font-weight: bold;">✓</span>
+                            Government service inquiries
+                        </li>
+                        <li style="padding: 8px 0; padding-left: 24px; position: relative;">
+                            <span style="position: absolute; left: 0; color: #667eea; font-weight: bold;">✓</span>
+                            Service request assistance
+                        </li>
+                        <li style="padding: 8px 0; padding-left: 24px; position: relative;">
+                            <span style="position: absolute; left: 0; color: #667eea; font-weight: bold;">✓</span>
+                            General information and support
+                        </li>
+                    </ul>
+                </div>
+            </div>
+           
+            <!-- Input Section -->
+            <div class="chat-input-section">
+                <div class="input-wrapper">
+                    <textarea
+                        id="user-input"
+                        placeholder="Type your message here... (e.g., 'How can I apply for a service?')"
+                        rows="1"
+                    ></textarea>
+                    <button id="mic-button" title="Voice input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button id="audioToggle" title="Toggle audio output">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <button id="send-button" title="Send message">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="input-hint">Press Enter to send, Shift+Enter for new line</div>
+                <div id="recording-indicator" style="display: none; margin-top: 8px; text-align: center; color: #dc3545; font-size: 14px;">
+                    <i class="fas fa-circle-notch fa-spin"></i> Recording...
+                </div>
+            </div>
+    </div>
+            </div>
+   
+    <!-- Add this modal HTML inside the <body> tag, before the closing </body> tag -->
+    <div id="language-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+        <div class="modal-content bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-bold mb-4 text-center">Select the language to recognize</h2>
+            <select id="language-select" class="w-full p-2 border border-gray-300 rounded">
+                <option value="en-US">English</option>
+                <option value="fr-FR">French</option>
+                <option value="ar-SA">Arabic</option>
+                <option value="es-ES">Spanish</option>
+                <option value="de-DE">German</option>
+                <option value="it-IT">Italian</option>
+                <option value="pt-PT">Portuguese</option>
+                <option value="zh-CN">Chinese (Simplified)</option>
+                <option value="zh-TW">Chinese (Traditional)</option>
+                <option value="ja-JP">Japanese</option>
+                <option value="ko-KR">Korean</option>
+                <option value="ru-RU">Russian</option>
+                <option value="hi-IN">Hindi</option>
+                <option value="bn-BD">Bengali</option>
+                <option value="tr-TR">Turkish</option>
+                <option value="vi-VN">Vietnamese</option>
+                <option value="th-TH">Thai</option>
+                <option value="pl-PL">Polish</option>
+                <option value="nl-NL">Dutch</option>
+                <option value="sv-SE">Swedish</option>
+                <option value="fi-FI">Finnish</option>
+                <option value="da-DK">Danish</option>
+                <option value="no-NO">Norwegian</option>
+                <option value="cs-CZ">Czech</option>
+                <option value="hu-HU">Hungarian</option>
+                <option value="ro-RO">Romanian</option>
+                <option value="sk-SK">Slovak</option>
+                <option value="sl-SI">Slovenian</option>
+                <option value="he-IL">Hebrew</option>
+                <option value="ta-IN">Tamil</option>
+                <option value="ml-IN">Malayalam</option>
+                <option value="mr-IN">Marathi</option>
+                <option value="gu-IN">Gujarati</option>
+                <option value="kn-IN">Kannada</option>
+                <option value="pa-IN">Punjabi</option>
+                <!-- Add more languages as needed -->
+            </select>
+            <div class="flex justify-center mt-4">
+                <button id="set-language-button" class="lang-button modern-button px-4 py-2">Set Language</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+// DOM Elements
+const chatContainer = document.getElementById('chat-container');
+const userInput = document.getElementById('user-input');
+const sendButton = document.getElementById('send-button');
+const micButton = document.getElementById('mic-button');
+const recordingIndicator = document.getElementById('recording-indicator');
+const audioToggle = document.getElementById('audioToggle');
+//const enLangButton = document.getElementById('enLangButton');
+//const arLangButton = document.getElementById('arLangButton');
+//const enLangButtonMobile = document.getElementById('enLangButtonMobile');
+//const arLangButtonMobile = document.getElementById('arLangButtonMobile');
+const inputContainer = document.getElementById('input-container');
+const headerMenu = document.getElementById('header-menu');
+const headerTitle = document.getElementById('header-title');
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+
+// State variables
+let conversationHistory = [];
+let isAudioEnabled = false;
+let currentAudio = null;
+let currentLanguage = 'en'; // Default language
+let recognition = null; // Web Speech API instance
+let mobileMenuOpen = false;
+let isConciseMode = false;
+let isLanguageSet = false;
+
+// Language content dictionary
+const languageContent = {
+    en: {
+        greeting: "Welcome to Citizen support! How can I assist you today?",
+        title: "Citizen Support Agent",
+        placeholder: "Type your message here...",
+        recording: "Recording...",
+        suggestions: "Suggestions:",
+        error: "I'm sorry, there was an error processing your request. Please try again.",
+        headerMenu: [
+            "Home", 
+            "Retail Banking", 
+            "Wholesale Banking", 
+            "Ways to Bank", 
+            "Internet Banking"
+        ],
+        footerSections: {
+            copyright: "© All Rights Reserved - 2025",
+            legalNotices: "Legal notices and cookie management"
+        }
+    },
+    ar: {
+        greeting: "مرحباً بك في البنك العربي الدولي! كيف يمكنني مساعدتك اليوم؟",
+        title: "ممثل دعم العملاء",
+        placeholder: "اكتب رسالتك هنا...",
+        recording: "جارٍ التسجيل...",
+        suggestions: "اقتراحات:",
+        error: "متأسف، حصلت مشكلة أثناء معالجة الطلب. حاول تاني من فضلك.",
+        headerMenu: [
+            "الرئيسية", 
+            "الخدمات المصرفية للأفراد", 
+           "الخدمات المصرفية للشركات الكبرى", 
+            "طرق التعامل مع البنك", 
+            "الخدمات المصرفية عبر الإنترنت"
+        ],
+        footerSections: {
+            copyright: "حقوق الطبع والنشر © 2018 البنك العربي الدولي. جميع الحقوق محفوظة.",
+            legalNotices: "سياسة الخصوصية"
+        }
+    }
+};
+
+// Initialize the chat
+document.addEventListener('DOMContentLoaded', () => {
+    // Clear conversation history on app load
+    conversationHistory = [];
+
+    // Set initial document direction
+    document.documentElement.dir = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+    
+    // Update layout based on current language
+    //updateLayoutDirection();
+    updateFullWidthHeader();
+    //updateLanguageUI();
+    
+    // Initial greeting message
+    addBotMessage(languageContent[currentLanguage].greeting);
+    
+    // Initialize Web Speech API
+    initializeSpeechRecognition();
+    
+    // Make textarea auto-expand
+    userInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+    
+    // Event listeners
+    sendButton.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    micButton.addEventListener('click', toggleRecording);
+    audioToggle.addEventListener('click', toggleAudioPlayback);
+    
+    // Language button event listeners
+    //enLangButton.addEventListener('click', () => changeLanguage('en'));
+    //arLangButton.addEventListener('click', () => changeLanguage('ar'));
+    //enLangButtonMobile.addEventListener('click', () => changeLanguage('en'));
+    //arLangButtonMobile.addEventListener('click', () => changeLanguage('ar'));
+    
+    // Mobile menu toggle
+    mobileMenuButton.addEventListener('click', toggleMobileMenu);
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (mobileMenuOpen && 
+            !e.target.closest('#mobile-menu-button') && 
+            !e.target.closest('#header-menu')) {
+            headerMenu.classList.remove('show');
+            mobileMenuOpen = false;
+        }
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && mobileMenuOpen) {
+            headerMenu.classList.remove('show');
+            mobileMenuOpen = false;
+        }
+    });
+});
+
+// Function to toggle mobile menu
+function toggleMobileMenu() {
+    mobileMenuOpen = !mobileMenuOpen;
+    headerMenu.classList.toggle('show', mobileMenuOpen);
+}
+
+// Function to initialize speech recognition
+function initializeSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false; // Stop after one utterance
+        recognition.interimResults = false; // Only final results
+        recognition.lang = currentLanguage === 'ar' ? 'ar-SA' : 'en-US'; // Set language based on UI language
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            userInput.value = transcript;
+            sendMessage(); // Automatically send the recognized text
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            alert(languageContent[currentLanguage].error);
+        };
+
+        recognition.onspeechend = () => {
+            micButton.classList.remove('bg-red-500');
+            recordingIndicator.classList.add('hidden');
+        };
+    } else {
+        console.error('Web Speech API not supported in this browser.');
+        micButton.disabled = true;
+        micButton.title = "Speech recognition not supported in this browser";
+        micButton.classList.add('opacity-50');
+    }
+}
+
+// Function to update layout direction based on language
+// function updateLayoutDirection() {
+//     // Set document and body direction
+//     document.documentElement.dir = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+//     document.body.dir = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+    
+//     // Update input field direction
+//     userInput.style.direction = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+    
+//     // Adjust input container for RTL/LTR
+//     if (currentLanguage === 'ar') {
+//         // RTL order: send button, mic button, input
+//         inputContainer.innerHTML = '';
+//         inputContainer.appendChild(sendButton);
+//         inputContainer.appendChild(micButton);
+//         inputContainer.appendChild(userInput);
+        
+//         // Update corners
+//         userInput.classList.remove('rounded-l-lg');
+//         userInput.classList.add('rounded-r-lg');
+//         sendButton.classList.remove('rounded-r-lg');
+//         sendButton.classList.add('rounded-l-lg');
+//     } else {
+//         // LTR order: input, mic button, send button
+//         inputContainer.innerHTML = '';
+//         inputContainer.appendChild(userInput);
+//         inputContainer.appendChild(micButton);
+//         inputContainer.appendChild(sendButton);
+        
+//         // Update corners
+//         userInput.classList.remove('rounded-r-lg');
+//         userInput.classList.add('rounded-l-lg');
+//         sendButton.classList.remove('rounded-l-lg');
+//         sendButton.classList.add('rounded-r-lg');
+//     }
+// }
+
+function updateFullWidthHeader() {
+    // Update language buttons
+    //enLangButton.classList.toggle('lang-active', currentLanguage === 'en');
+    //arLangButton.classList.toggle('lang-active', currentLanguage === 'ar');
+    //enLangButtonMobile.classList.toggle('lang-active', currentLanguage === 'en');
+    //arLangButtonMobile.classList.toggle('lang-active', currentLanguage === 'ar');
+    
+    // Update header title
+
+    
+    // Update header menu
+    if (headerMenu) {
+        headerMenu.innerHTML = '';
+        languageContent[currentLanguage].headerMenu.forEach(item => {
+            const link = document.createElement('a');
+            link.href = '#';
+            link.textContent = item;
+            headerMenu.appendChild(link);
+        });
+    }
+    
+    // Update footer content
+    updateFooterContent();
+}
+
+
+// Function to update footer content
+function updateFooterContent() {
+    const footerSections = languageContent[currentLanguage].footerSections;
+    
+    // Update copyright text
+    const copyrightElement = document.querySelector('.border-t.border-gray-700 p');
+    if (copyrightElement) {
+        copyrightElement.textContent = footerSections.copyright;
+    }
+    
+    // Update legal notices
+    const legalElement = document.querySelector('.footer-links a');
+    if (legalElement) {
+        legalElement.textContent = footerSections.legalNotices;
+    }
+    
+    // Update footer sections
+    const footerGridSections = document.querySelectorAll('.footer-grid > div');
+    if (footerGridSections.length >= 3) {
+        // First section - Contact Us
+        const firstSection = footerGridSections[0];
+        const firstHeading = firstSection.querySelector('h4');
+        if (firstHeading) {
+            firstHeading.textContent = footerSections.government.title;
+        }
+        const firstLinks = firstSection.querySelectorAll('p');
+        footerSections.government.links.forEach((link, index) => {
+            if (firstLinks[index]) {
+                firstLinks[index].textContent = link;
+            }
+        });
+        
+        // Second section - Twitter Feed
+        const secondSection = footerGridSections[1];
+        const secondHeading = secondSection.querySelector('h4');
+        if (secondHeading) {
+            secondHeading.textContent = footerSections.publications.title;
+        }
+        const secondLinks = secondSection.querySelectorAll('p');
+        footerSections.publications.links.forEach((link, index) => {
+            if (secondLinks[index]) {
+                secondLinks[index].textContent = link;
+            }
+        });
+        
+        // Third section - Navigation
+        const thirdSection = footerGridSections[2];
+        const thirdHeading = thirdSection.querySelector('h4');
+        if (thirdHeading) {
+            thirdHeading.textContent = footerSections.opportunities.title;
+        }
+        const thirdLinks = thirdSection.querySelectorAll('li a');
+        footerSections.opportunities.links.forEach((link, index) => {
+            if (thirdLinks[index]) {
+                thirdLinks[index].textContent = link;
+            }
+        });
+    }
+}
+
+// Function to update UI elements based on language
+// function updateLanguageUI() {
+//     document.querySelector('title').textContent = languageContent[currentLanguage].title;
+//     document.querySelector('header h1').textContent = languageContent[currentLanguage].title;
+//     userInput.placeholder = languageContent[currentLanguage].placeholder;
+//     document.getElementById('recording-indicator').textContent = languageContent[currentLanguage].recording;
+    
+//     // Update language button states
+//     //enLangButton.classList.toggle('lang-active', currentLanguage === 'en');
+//     //arLangButton.classList.toggle('lang-active', currentLanguage === 'ar');
+    
+//     // Update speech recognition language if initialized
+//     if (recognition) {
+//         recognition.lang = currentLanguage === 'ar' ? 'ar-SA' : 'en-US';
+//     }
+// }
+
+// Function to change language
+function changeLanguage(lang) {
+    if (currentLanguage === lang) return; // No change needed
+
+    currentLanguage = lang;
+    
+    // Update UI components
+    //updateLanguageUI();
+    //updateLayoutDirection();
+    updateFullWidthHeader();
+
+    // Clear conversation history
+    conversationHistory = [];
+
+    // Clear chat container
+    chatContainer.innerHTML = '';
+
+    // Resend greeting in new language
+    const greeting = languageContent[currentLanguage].greeting;
+    addBotMessage(greeting);
+
+    if (isAudioEnabled) {
+        fetch('/api/new_chat', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                message: greeting,
+                history: [],
+                generate_audio: true,
+                language: currentLanguage
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.audio_path) {
+                playAudio(data.audio_path);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching audio:', error);
+        });
+    }
+}
+
+// Function to toggle audio playback
+function toggleAudioPlayback() {
+    isAudioEnabled = !isAudioEnabled;
+    audioToggle.classList.toggle('audio-active', isAudioEnabled);
+
+    if (currentAudio && !isAudioEnabled) {
+        currentAudio.pause();
+        currentAudio = null;
+    }
+}
+
+// Function to handle speech recording
+function toggleRecording() {
+    if (!recognition) return;
+
+    if (micButton.classList.contains('bg-red-500')) {
+        recognition.stop();
+        micButton.classList.remove('bg-red-500');
+        recordingIndicator.classList.add('hidden');
+    } else {
+        if (!isLanguageSet) {
+            // Show the language selection modal if the language is not set
+            document.getElementById('language-modal').classList.remove('hidden');
+        } else {
+            // Start recording if the language is already set
+            recognition.start();
+            micButton.classList.add('bg-red-500'); // Change mic button style
+            recordingIndicator.classList.remove('hidden'); // Show recording indicator
+        }
+    }
+}
+
+// Function to set the recognition language and start recording
+function setRecognitionLanguage() {
+    const selectedLanguage = document.getElementById('language-select').value;
+    recognition.lang = selectedLanguage; // Set the language for recognition
+    currentLanguage = selectedLanguage.split('-')[0]; // Update currentLanguage based on selection
+    isLanguageSet = true; // Mark the language as set
+    document.getElementById('language-modal').classList.add('hidden'); // Hide the modal
+    recognition.start(); // Start recognition
+    micButton.classList.add('bg-red-500'); // Change mic button style
+    recordingIndicator.classList.remove('hidden'); // Show recording indicator
+}
+
+// Add event listener for the set language button
+document.getElementById('set-language-button').addEventListener('click', setRecognitionLanguage);
+
+// Add event listener for the Change Language button
+document.getElementById('change-language-button').addEventListener('click', () => {
+    if (isLanguageSet) {
+        // Show the language selection modal again
+        document.getElementById('language-modal').classList.remove('hidden');
+    }
+});
+
+// Function to send message
+function sendMessage() {
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    addUserMessage(message);
+    userInput.value = '';
+    const loadingElement = addLoadingIndicator();
+    conversationHistory.push({ role: 'user', content: message });
+
+    fetch('/api/new_chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            message: message,
+            history: conversationHistory,
+            generate_audio: isAudioEnabled,
+            preferred_language: currentLanguage,
+            concise_mode: isConciseMode
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        loadingElement.remove();
+        addBotMessage(data.response);
+        conversationHistory.push({ role: 'assistant', content: data.response });
+
+        // Language direction is handled by the message wrapper, no need to change alignment
+
+        if (isAudioEnabled && data.audio_path) {
+            playAudio(data.audio_path);
+        }
+
+        processSuggestions(data.response);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        loadingElement.remove();
+        addBotMessage(languageContent[currentLanguage].error);
+    });
+}
+
+// Function to process suggestions
+function processSuggestions(message) {
+    const botMessages = document.querySelectorAll('.bot-bubble');
+    const lastBotMessage = botMessages[botMessages.length - 1];
+    
+    if (message.includes(languageContent[currentLanguage].suggestions)) {
+        const buttonContainer = document.createElement('div');
+        buttonContainer.classList.add('mt-3', 'flex', 'flex-wrap');
+        
+        // Check if categories exist in the language content
+        if (languageContent[currentLanguage].categories) {
+            languageContent[currentLanguage].categories.forEach(category => {
+                const button = document.createElement('button');
+                button.classList.add('category-button');
+                button.textContent = category;
+                button.addEventListener('click', () => {
+                    userInput.value = category;
+                    sendMessage();
+                });
+                buttonContainer.appendChild(button);
+            });
+            
+            lastBotMessage.appendChild(buttonContainer);
+        }
+    }
+}
+
+// Function to add user message to chat
+function addUserMessage(message) {
+    // Remove welcome message if it exists
+    const welcomeMsg = document.querySelector('.welcome-message');
+    if (welcomeMsg) welcomeMsg.remove();
+    
+    const messageWrapper = document.createElement('div');
+    messageWrapper.classList.add('message', 'user');
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('chat-bubble', 'user-bubble');
+    messageDiv.textContent = message;
+    
+    messageWrapper.appendChild(messageDiv);
+    chatContainer.appendChild(messageWrapper);
+    scrollToBottom();
+}
+
+// Function to add bot message to chat
+function addBotMessage(message) {
+    // Remove welcome message if it exists
+    const welcomeMsg = document.querySelector('.welcome-message');
+    if (welcomeMsg) welcomeMsg.remove();
+    
+    const messageWrapper = document.createElement('div');
+    messageWrapper.classList.add('message', 'assistant');
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('chat-bubble', 'bot-bubble');
+    messageDiv.innerHTML = message
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+    
+    messageWrapper.appendChild(messageDiv);
+    chatContainer.appendChild(messageWrapper);
+    scrollToBottom();
+}
+
+// Function to add loading indicator
+function addLoadingIndicator() {
+    // Remove welcome message if it exists
+    const welcomeMsg = document.querySelector('.welcome-message');
+    if (welcomeMsg) welcomeMsg.remove();
+    
+    const messageWrapper = document.createElement('div');
+    messageWrapper.classList.add('message', 'assistant');
+    
+    const loadingDiv = document.createElement('div');
+    loadingDiv.classList.add('loading-message');
+    
+    const dotsContainer = document.createElement('div');
+    dotsContainer.classList.add('loading-dots');
+    
+    for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('loading-dot');
+        dotsContainer.appendChild(dot);
+    }
+    
+    loadingDiv.appendChild(dotsContainer);
+    messageWrapper.appendChild(loadingDiv);
+    chatContainer.appendChild(messageWrapper);
+    scrollToBottom();
+    return loadingDiv;
+}
+
+// Function to play audio
+function playAudio(audioPath) {
+    if (currentAudio) {
+        currentAudio.pause();
+    }
+    currentAudio = new Audio(audioPath);
+    currentAudio.play();
+}
+
+function stopAudioPlayback() {
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0; // Reset audio to start
+        currentAudio = null; // Clear current audio reference
+    }
+}
+document.getElementById('stop-button').addEventListener('click', stopAudioPlayback);
+
+// Function to scroll chat to bottom
+function scrollToBottom() {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+ 
+        // Function to update full-width header and footer
+        function updateFullWidthHeaderAndFooter() {
+            // Update header menu
+            const headerMenu = document.getElementById('header-menu');
+            headerMenu.innerHTML = languageContent[currentLanguage].headerMenu.map(item => `<a href="#" class="hover:text-gray-300">${item}</a>`)
+                .join('');
+ 
+            // Update footer sections
+            const sections = ['government', 'publications', 'opportunities', 'benin'];
+            sections.forEach(section => {
+                document.getElementById(`${section}-title`).textContent =
+                    languageContent[currentLanguage].footerSections[section].title;
+               
+                const linksContainer = document.getElementById(`${section}-links`);
+                linksContainer.innerHTML = languageContent[currentLanguage].footerSections[section].links
+                    .map(link => `<p>${link}</p>`)
+                    .join('');
+            });
+        }
+ 
+    // Toggle concise mode
+    const checkboxInput = document.getElementById('checkboxInput');
+    if (checkboxInput) {
+        checkboxInput.addEventListener('change', () => {
+            isConciseMode = checkboxInput.checked;
+        });
+    }
+
+ 
+    </script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+/* Workforce Allocation Dashboard Styles */
+
+:root {
+    --workforce-primary: #0066cc;
+    --workforce-secondary: #004499;
+    --workforce-success: #28a745;
+    --workforce-warning: #ffc107;
+    --workforce-danger: #dc3545;
+    --workforce-light: #e3f2fd;
+    --workforce-dark: #003366;
+}
+
+/* Header */
+.workforce-header {
+    background: linear-gradient(135deg, var(--workforce-primary) 0%, var(--workforce-secondary) 100%);
+    color: white;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.workforce-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.workforce-filter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.workforce-filter label {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.workforce-select {
+    padding: 10px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 200px;
+}
+
+.workforce-select:hover {
+    background: #ffffff;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.workforce-select:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+/* Metrics Grid */
+.workforce-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.workforce-metric-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 4px solid var(--workforce-primary);
+    position: relative;
+}
+
+.workforce-metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.workforce-metric-card.deployed {
+    border-left-color: var(--workforce-danger);
+}
+
+.workforce-metric-card.shortfall {
+    border-left-color: var(--workforce-warning);
+}
+
+.workforce-metric-card.availability {
+    border-left-color: var(--workforce-success);
+}
+
+.workforce-metric-card.time {
+    border-left-color: #6c757d;
+}
+
+.workforce-metric-card .metric-icon {
+    font-size: 40px;
+    opacity: 0.15;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.workforce-metric-card .metric-label {
+    font-size: 13px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.workforce-metric-card .metric-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--workforce-primary);
+    margin: 12px 0;
+}
+
+.workforce-metric-card .text-muted {
+    font-size: 13px;
+    color: #999;
+}
+
+.workforce-metric-card .alert-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: var(--workforce-danger);
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+}
+
+/* Capacity Breakdown */
+.workforce-capacity-breakdown {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 32px;
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--workforce-dark);
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--workforce-light);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.workforce-role-item {
+    padding: 20px;
+    margin-bottom: 16px;
+    background: var(--workforce-light);
+    border-radius: 10px;
+    border-left: 4px solid var(--workforce-primary);
+    transition: all 0.3s;
+}
+
+.workforce-role-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.15);
+}
+
+.workforce-role-item .role-name {
+    font-weight: 700;
+    color: var(--workforce-dark);
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.workforce-role-item .role-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #666;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.workforce-role-item .role-stats strong {
+    color: var(--workforce-primary);
+    font-weight: 700;
+}
+
+.workforce-progress-bar {
+    height: 28px;
+    background-color: #e9ecef;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.workforce-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--workforce-success) 0%, #20c997 100%);
+    transition: width 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 12px;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.workforce-role-item .availability-rate {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #666;
+}
+
+/* District Table */
+.workforce-district-table-container {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.workforce-table-controls {
+    margin-bottom: 20px;
+}
+
+.workforce-search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s;
+}
+
+.workforce-search-input:focus {
+    outline: none;
+    border-color: var(--workforce-primary);
+    box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+}
+
+.workforce-table-responsive {
+    overflow-x: auto;
+}
+
+.workforce-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.workforce-table thead {
+    background: var(--workforce-primary);
+    color: white;
+}
+
+.workforce-table thead th {
+    border: none;
+    padding: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-align: left;
+}
+
+.workforce-table tbody tr {
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.workforce-table tbody tr:hover {
+    background-color: var(--workforce-light);
+}
+
+.workforce-table tbody td {
+    padding: 16px;
+    font-size: 15px;
+    color: #333;
+}
+
+.workforce-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 13px;
+    display: inline-block;
+}
+
+.workforce-badge.badge-yes {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.workforce-badge.badge-no {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.workforce-badge.badge-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.workforce-progress-inline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.workforce-progress-bar-small {
+    flex: 1;
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 100px;
+}
+
+.workforce-progress-fill-small {
+    height: 100%;
+    background: linear-gradient(90deg, var(--workforce-warning) 0%, #f59e0b 100%);
+    transition: width 0.5s ease;
+}
+
+.workforce-btn-view {
+    background-color: var(--workforce-primary);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.workforce-btn-view:hover {
+    background-color: var(--workforce-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+}
+
+.workforce-btn-view:active {
+    transform: translateY(0);
+}
+
+/* Loading States */
+.loading-container {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--workforce-primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    margin-top: 16px;
+    color: #666;
+    font-size: 15px;
+}
+
+.loading-cell {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.error-message,
+.error-cell {
+    color: var(--workforce-danger);
+    text-align: center;
+    padding: 20px;
+    background: #fee2e2;
+    border-radius: 8px;
+    border-left: 4px solid var(--workforce-danger);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .workforce-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+    }
+    
+    .workforce-header h1 {
+        font-size: 22px;
+    }
+    
+    .workforce-filter {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .workforce-select {
+        width: 100%;
+    }
+    
+    .workforce-metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .workforce-role-item .role-stats {
+        flex-direction: column;
+    }
+    
+    .workforce-table {
+        font-size: 13px;
+    }
+    
+    .workforce-table thead th,
+    .workforce-table tbody td {
+        padding: 12px 8px;
+    }
+}
+

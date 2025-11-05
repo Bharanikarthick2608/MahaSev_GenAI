@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Alerts & AI Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/chatbot.css">
+    <link rel="stylesheet" href="/static/dashboard.css">
+    <link rel="stylesheet" href="/static/metrics.css">
+    <link rel="stylesheet" href="/static/metrics-new.css">
+    <link rel="stylesheet" href="/static/policy-sandbox.css">
+    <link rel="stylesheet" href="/static/workforce.css">
+</head>
+<body>
+    <!-- Debug Script - User Type Verification -->
+    <script>
+        console.log('Admin Dashboard Loaded');
+        console.log('Username: {{ username }}');
+    </script>
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="sidebar-title">Admin Portal</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <!-- Admin Navigation -->
+            <!-- 1. Admin Chatbot (AI Assistant) -->
+            <a href="#" class="nav-item active" data-view="chatbot" id="navChatbot">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span class="nav-text">AI Assistant</span>
+            </a>
+            
+            <!-- 2. Metrics Dashboard -->
+            <a href="#" class="nav-item" data-view="metrics" id="navMetrics">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="20" x2="12" y2="10"></line>
+                    <line x1="18" y1="20" x2="18" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+                <span class="nav-text">Metrics Dashboard</span>
+            </a>
+            
+            <!-- 3. Disease Forecasting -->
+            <a href="#" class="nav-item" data-view="forecast" id="navForecast">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                </svg>
+                <span class="nav-text">Disease Forecasting</span>
+            </a>
+            
+            <!-- 4. Workforce Allocation -->
+            <a href="#" class="nav-item" data-view="workforce" id="navWorkforce">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span class="nav-text">Workforce Allocation</span>
+            </a>
+            
+            <!-- 5. Alerts & Feedback -->
+            <a href="#" class="nav-item" data-view="alerts" id="navAlerts">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span class="nav-text">Alerts & Feedback</span>
+                <span class="nav-badge" id="navAlertsBadge">0</span>
+            </a>
+            
+            <!-- 6. Policy Sandbox -->
+            <a href="#" class="nav-item" data-view="policy-sandbox" id="navPolicySandbox">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M12 1v6m0 6v6m8.66-15L17 7.34M7 17l-3.66 3.66M23 12h-6m-6 0H1m20.66 8.66L17 17M7 7 3.34 3.34"></path>
+                </svg>
+                <span class="nav-text">Policy Sandbox</span>
+            </a>
+            
+            <!-- 7. Ticket Monitoring -->
+            <a href="#" class="nav-item" data-view="tickets" id="navTickets">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span class="nav-text">Ticket Monitoring</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="sidebar-date">{{ current_date }}</div>
+            <a href="/logout" class="logout-btn" style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                margin-top: 12px;
+                margin-bottom: 12px;
+                padding: 10px 16px;
+                background: rgba(255, 99, 71, 0.2);
+                border: 1px solid rgba(255, 99, 71, 0.4);
+                border-radius: 8px;
+                color: white;
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 600;
+                transition: all 0.2s;
+            " onmouseover="this.style.background='rgba(255,99,71,0.35)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,99,71,0.2)'; this.style.transform='translateY(0)'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                <span>Logout</span>
+            </a>
+            <a href="/architecture" target="_blank" class="architecture-link" style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                margin-top: 12px;
+                padding: 10px 16px;
+                background: rgba(255, 255, 255, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                border-radius: 8px;
+                color: white;
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 600;
+                transition: all 0.2s;
+            " onmouseover="this.style.background='rgba(255,255,255,0.25)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'; this.style.transform='translateY(0)'">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>View Architecture</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity: 0.7;">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-content" id="mainContent">
+        <!-- Alerts & Feedback View -->
+        <div class="view-container" id="alertsView">
+            <!-- Header -->
+            <header class="view-header">
+                <h1 class="view-title">Alerts & Feedback Dashboard</h1>
+            </header>
+
+            <!-- Dashboard Cards -->
+            <section class="metrics-section">
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-label">Active Alerts</div>
+                        <div class="metric-value" id="activeAlerts">2</div>
+                    </div>
+                    <div class="metric-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-label">Critical Issues</div>
+                        <div class="metric-value" id="criticalIssues">1</div>
+                    </div>
+                    <div class="metric-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fd7e14" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-label">Total Feedback</div>
+                        <div class="metric-value" id="totalFeedback">5</div>
+                    </div>
+                    <div class="metric-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#20c997" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-label">Positive Sentiment</div>
+                        <div class="metric-value" id="positiveSentiment">40%</div>
+                    </div>
+                    <div class="metric-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#495057" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation Tabs -->
+            <section class="tabs-section">
+                <button class="tab-btn active" id="alertsTab" data-tab="alerts">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    Real-time Alerts <span class="tab-count" id="alertsCount"></span>
+                </button>
+                <button class="tab-btn" id="feedbackTab" data-tab="feedback">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Citizen Feedback <span class="tab-count" id="feedbackCount"></span>
+                </button>
+            </section>
+
+            <!-- Filters Section -->
+            <section class="filters-section">
+                <div class="filter-group">
+                    <label class="filter-label">Severity</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter-type="severity" data-value="All">All</button>
+                        <button class="filter-btn" data-filter-type="severity" data-value="Critical">Critical</button>
+                        <button class="filter-btn" data-filter-type="severity" data-value="Warning">Warning</button>
+                        <button class="filter-btn" data-filter-type="severity" data-value="Info">Info</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Status</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn" data-filter-type="status" data-value="All">All</button>
+                        <button class="filter-btn" data-filter-type="status" data-value="Active">Active</button>
+                        <button class="filter-btn" data-filter-type="status" data-value="Acknowledged">Acknowledged</button>
+                        <button class="filter-btn active" data-filter-type="status" data-value="Resolved">Resolved</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Content Area -->
+            <section class="content-section">
+                <div id="contentList" class="content-list">
+                    <!-- Alerts/Feedback items will be loaded here -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Chatbot View -->
+        <div class="view-container hidden" id="chatbotView">
+            <!-- Header -->
+            <header class="chatbot-header">
+                <div class="header-content">
+                    <div>
+                        <h1 class="chatbot-title">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 12px;">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            AI Admin Assistant
+                        </h1>
+                        <p class="chatbot-subtitle">Intelligent cross-sectoral intelligence chatbot powered by multi-agent architecture</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-clear" id="clearHistoryBtn" title="Clear conversation history">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- District Selector -->
+            <div class="district-selector-section">
+                <label for="districtSelect" class="district-label">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    District (Optional)
+                </label>
+                <select id="districtSelect" class="district-select">
+                    <option value="All Districts">All Districts</option>
+                </select>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="chat-wrapper">
+                <div class="chat-container" id="chatContainer">
+                    <div class="welcome-message">
+                        <div class="welcome-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <h2>Welcome to AI Admin Assistant</h2>
+                        <p>Ask me anything about districts, health infrastructure, resources, or service metrics. I can help you:</p>
+                        <ul>
+                            <li>Analyze district-specific data and metrics</li>
+                            <li>Compare multiple districts</li>
+                            <li>Get health vulnerability assessments</li>
+                            <li>Check infrastructure strain scores</li>
+                            <li>Review resource allocation and worker utilization</li>
+                        </ul>
+                        <p class="example-queries">Try asking: "What is the health vulnerability in Ahmednagar?" or "Show me districts with high P-Scores"</p>
+                    </div>
+                </div>
+
+                <!-- Suggested Questions -->
+                <div class="suggested-questions">
+                    <div class="suggested-questions-label">Suggested Questions:</div>
+                    <div class="suggested-questions-list">
+                        <button class="suggested-question-btn" data-question="How many icu beds are there in nagpur">How many icu beds are there in nagpur</button>
+                        <button class="suggested-question-btn" data-question="Show me the emergency cases per month for all districts">Show me the emergency cases per month for all districts</button>
+                        <button class="suggested-question-btn" data-question="What is the bed occupancy rate in Aurangabad?">What is the bed occupancy rate in Aurangabad?</button>
+                        <button class="suggested-question-btn" data-question="Which district has the most infrastructure service requests?">Which district has the most infrastructure service requests?</button>
+                        <button class="suggested-question-btn" data-question="How many workers are available in Amravati?">How many workers are available in Amravati?</button>
+                    </div>
+                </div>
+
+                <!-- Input Section -->
+                <div class="chat-input-section">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="queryInput" 
+                            class="chat-input" 
+                            placeholder="Type your query here... (e.g., 'What is the health vulnerability in Ahmednagar?')"
+                            rows="1"
+                        ></textarea>
+                        <button id="sendBtn" class="send-btn" title="Send message">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="input-footer">
+                        <span class="input-hint">Press Enter to send, Shift+Enter for new line</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics Display Section (Hidden by default) -->
+            <div class="metrics-display-section" id="metricsSection" style="display: none;">
+                <div class="metrics-header">
+                    <h3>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="20" x2="12" y2="10"></line>
+                            <line x1="18" y1="20" x2="18" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="16"></line>
+                        </svg>
+                        District Metrics: <span id="metricsDistrictName"></span>
+                    </h3>
+                </div>
+                <div class="metrics-grid" id="metricsGrid">
+                    <!-- Metrics cards will be inserted here -->
+                </div>
+                <div class="metrics-recommendations" id="metricsRecommendations" style="display: none;">
+                    <h4>Recommendations</h4>
+                    <ul id="recommendationsList"></ul>
+                </div>
+            </div>
+
+            <!-- XAI Log Section (Collapsible) -->
+            <div class="xai-log-section" id="xaiLogSection" style="display: none;">
+                <div class="xai-log-header" id="xaiLogToggle">
+                    <h4>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        Explainable AI (XAI) Log
+                        <span class="xai-log-count" id="xaiLogCount"></span>
+                    </h4>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="xai-toggle-icon">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="xai-log-content" id="xaiLogContent">
+                    <!-- XAI log entries will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Dashboard View -->
+        <div class="view-container hidden" id="metricsView">
+            <!-- Header -->
+            <header class="view-header">
+                <h1 class="view-title">District Metrics Calculator</h1>
+                <p class="view-subtitle">Select a district and calculate comprehensive health, infrastructure, and resource metrics</p>
+            </header>
+
+            <!-- District Selection Section -->
+            <section class="district-selection-section">
+                <div class="selection-card">
+                    <label class="selection-label">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Select District
+                    </label>
+                    <select id="metricsDistrictSelect" class="metrics-district-dropdown">
+                        <option value="">Choose a district to analyze...</option>
+                    </select>
+                    <button id="calculateMetricsBtn" class="calculate-btn" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="16 12 12 8 8 12"></polyline>
+                            <line x1="12" y1="16" x2="12" y2="8"></line>
+                        </svg>
+                        Calculate Metrics
+                    </button>
+                </div>
+            </section>
+
+            <!-- Metrics Information Cards -->
+            <section class="metrics-info-section">
+                <h2 class="info-section-title">Understanding the Metrics</h2>
+                <div class="metrics-info-grid">
+                    <div class="info-card">
+                        <div class="info-icon priority-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <h3>P-Score</h3>
+                        <p class="info-subtitle">Cross-Sectoral Priority Score</p>
+                        <p class="info-description">Combines health vulnerability, infrastructure strain, and resource contention into a unified priority score. Higher scores (above 7) indicate districts requiring immediate cross-sectoral intervention.</p>
+                        <div class="info-formula">Weighted: HVI(40%) + ISS(30%) + RCS(30%)</div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon health-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                            </svg>
+                        </div>
+                        <h3>HVI</h3>
+                        <p class="info-subtitle">Health Vulnerability Index</p>
+                        <p class="info-description">Measures health system vulnerability by analyzing ICU capacity, emergency cases, and bed occupancy. Predicts potential health crises and capacity shortfalls.</p>
+                        <div class="info-formula">Scale: 0-10 (Higher = More Vulnerable)</div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon infrastructure-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </div>
+                        <h3>ISS</h3>
+                        <p class="info-subtitle">Infrastructure Strain Score</p>
+                        <p class="info-description">Evaluates infrastructure service demand including roads, water treatment, and electricity. High scores indicate urgent infrastructure capacity expansion needs.</p>
+                        <div class="info-formula">Scale: 0-10 (Higher = More Strain)</div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon resource-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h3>RCS</h3>
+                        <p class="info-subtitle">Resource Contention Score</p>
+                        <p class="info-description">Analyzes worker availability, utilization rates, and escalation patterns. Identifies districts where human resources are overstretched or underutilized.</p>
+                        <div class="info-formula">Scale: 0-10 (Higher = More Contention)</div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon equity-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="2" x2="12" y2="22"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <h3>SEL</h3>
+                        <p class="info-subtitle">Service Equity Lag Index</p>
+                        <p class="info-description">Measures service delivery disparities compared to population needs. Values above 1.3 indicate significant equity gaps requiring targeted interventions.</p>
+                        <div class="info-formula">Scale: 0.5-2.0+ (Higher = More Inequity)</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section (Hidden by default) -->
+            <section class="metrics-results-section" id="metricsResultsSection" style="display: none;">
+                <h2 class="results-title">Analysis Results for <span id="resultsDistrictName"></span></h2>
+                
+                <div class="results-grid" id="metricsResultsGrid">
+                    <!-- Results will be populated here -->
+                </div>
+
+                <div class="recommendations-section" id="recommendationsSection" style="display: none;">
+                    <h3>Recommendations & Action Items</h3>
+                    <ul class="recommendations-list" id="recommendationsListNew"></ul>
+                </div>
+
+                <div class="issues-section" id="issuesSection" style="display: none;">
+                    <h3>Identified Issues</h3>
+                    <ul class="issues-list" id="issuesList"></ul>
+                </div>
+            </section>
+        </div>
+
+        <!-- AI Policy Sandbox View -->
+        <div class="view-container hidden" id="policySandboxView">
+            <!-- Header -->
+            <header class="policy-sandbox-header">
+                <div class="policy-sandbox-logo">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m8.66-15L17 7.34M7 17l-3.66 3.66M23 12h-6m-6 0H1m20.66 8.66L17 17M7 7 3.34 3.34"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="policy-sandbox-title">AI Policy Sandbox: Predictive Scenario Analysis</h1>
+                    <p class="policy-sandbox-subtitle">Experiment with data-driven forecasts for new public policies</p>
+                </div>
+            </header>
+
+            <!-- Scenario Selector -->
+            <section class="scenario-selector-section">
+                <label class="scenario-selector-label">Select Policy Scenario</label>
+                <select id="scenarioSelect" class="scenario-select-dropdown">
+                    <option value="traffic">🛣️ Traffic & Infrastructure Policy</option>
+                    <option value="health">🏥 Public Health & Service Delivery Policy</option>
+                    <option value="revenue">💰 Revenue & Citizen Compliance Policy</option>
+                </select>
+            </section>
+
+            <!-- Scenario Content -->
+            <div id="scenarioContent" class="scenario-content">
+                <!-- Content will be dynamically loaded here -->
+            </div>
+
+            <!-- Footer -->
+            <footer class="policy-sandbox-footer">
+                <p>© 2025 AI Policy Sandbox | Powered by Predictive Engine (Vertex AI Simulation)</p>
+            </footer>
+        </div>
+
+        <!-- Workforce Allocation View -->
+        <div class="view-container hidden" id="workforceView">
+            <!-- Header -->
+            <div class="workforce-header">
+                <h1><i class="fas fa-users-cog"></i> Workforce & Resource Allocation Dashboard</h1>
+                <div class="workforce-filter">
+                    <label for="workforceDistrictFilter">Filter by District:</label>
+                    <select id="workforceDistrictFilter" class="workforce-select">
+                        <option value="all">All Districts</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Main Capacity Cards -->
+            <div class="workforce-metrics-grid">
+                <div class="workforce-metric-card deployed">
+                    <div class="metric-icon"><i class="fas fa-user-check"></i></div>
+                    <div class="metric-label">Total Deployed Personnel</div>
+                    <div class="metric-value" id="workforceTotalDeployed">-</div>
+                    <small class="text-muted">Currently addressing active alerts</small>
+                </div>
+                
+                <div class="workforce-metric-card shortfall">
+                    <div class="metric-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="metric-label">Critical Shortfall Alerts</div>
+                    <div class="metric-value" id="workforceCriticalShortfall">-</div>
+                    <small class="text-muted">Areas below safety threshold</small>
+                    <span class="alert-badge" id="workforceShortfallBadge" style="display: none;">!</span>
+                </div>
+                
+                <div class="workforce-metric-card availability">
+                    <div class="metric-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="metric-label">Highest Availability (Role)</div>
+                    <div class="metric-value" id="workforceHighestAvailability">-</div>
+                    <small class="text-muted">Category with most available staff</small>
+                </div>
+                
+                <div class="workforce-metric-card time">
+                    <div class="metric-icon"><i class="fas fa-clock"></i></div>
+                    <div class="metric-label">Average Deployment Time</div>
+                    <div class="metric-value" id="workforceAvgDeploymentTime">-</div>
+                    <small class="text-muted">From alert to deployment</small>
+                </div>
+            </div>
+
+            <!-- Role-Wise Capacity Breakdown -->
+            <div class="workforce-capacity-breakdown">
+                <h2 class="section-title"><i class="fas fa-chart-bar"></i> Role-Wise Capacity Breakdown</h2>
+                <div id="workforceRoleBreakdown">
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <p class="loading-text">Loading capacity data...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- District Deployment Status -->
+            <div class="workforce-district-table-container">
+                <h2 class="section-title"><i class="fas fa-map-marked-alt"></i> Real-time District Resource Summary</h2>
+                <div class="workforce-table-controls">
+                    <input type="text" id="workforceSearchTable" class="workforce-search-input" placeholder="Search districts...">
+                </div>
+                <div class="workforce-table-responsive">
+                    <table class="workforce-table" id="workforceDistrictTable">
+                        <thead>
+                            <tr>
+                                <th>District</th>
+                                <th>Active Alerts</th>
+                                <th>Total Available Workforce</th>
+                                <th>Health Staff Used (%)</th>
+                                <th>Police/Safety Shortfall</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workforceDistrictTableBody">
+                            <tr>
+                                <td colspan="6" class="loading-cell">
+                                    <div class="loading-spinner"></div>
+                                    <p class="loading-text">Loading district data...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disease Forecasting View -->
+        <div class="view-container hidden" id="forecastView">
+            <iframe 
+                id="forecastFrame" 
+                src="/forecast" 
+                title="Disease Forecasting Dashboard">
+            </iframe>
+        </div>
+
+        <!-- Multilingual Bot View -->
+        <div class="view-container hidden" id="multilingual-botView">
+            <iframe 
+                id="multilingualBotFrame" 
+                src="/multilingual_bot" 
+                title="Multilingual Bot">
+            </iframe>
+        </div>
+
+        <!-- Feedback Portal View -->
+        <div class="view-container hidden" id="feedback-portalView">
+            <header class="view-header">
+                <h1 class="view-title">Citizen Feedback Portal</h1>
+                <p style="color: #666; margin-top: 8px;">Share your feedback and help us improve our services</p>
+            </header>
+
+            <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+                <!-- Feedback Form -->
+                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <form id="feedbackForm" style="display: flex; flex-direction: column; gap: 20px;">
+                        <!-- Name Field -->
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label for="feedbackName" style="font-weight: 600; color: #333;">Your Name</label>
+                            <input 
+                                type="text" 
+                                id="feedbackName" 
+                                name="name" 
+                                placeholder="Enter your name"
+                                style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                                required
+                            />
+                        </div>
+
+                        <!-- Email Field -->
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label for="feedbackEmail" style="font-weight: 600; color: #333;">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="feedbackEmail" 
+                                name="email" 
+                                placeholder="your.email@example.com"
+                                style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                                required
+                            />
+                        </div>
+
+                        <!-- Category Field -->
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label for="feedbackCategory" style="font-weight: 600; color: #333;">Feedback Category</label>
+                            <select 
+                                id="feedbackCategory" 
+                                name="category"
+                                style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;"
+                                required
+                            >
+                                <option value="">Select a category</option>
+                                <option value="service_quality">Service Quality</option>
+                                <option value="health_concern">Health Concern</option>
+                                <option value="suggestion">Suggestion</option>
+                                <option value="complaint">Complaint</option>
+                                <option value="appreciation">Appreciation</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Feedback Message -->
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <label for="feedbackMessage" style="font-weight: 600; color: #333;">Your Feedback</label>
+                            <textarea 
+                                id="feedbackMessage" 
+                                name="message" 
+                                rows="6"
+                                placeholder="Please share your detailed feedback here..."
+                                style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: vertical; font-family: inherit;"
+                                required
+                            ></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button 
+                            type="submit" 
+                            style="padding: 14px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s;"
+                            onmouseover="this.style.transform='translateY(-2px)'"
+                            onmouseout="this.style.transform='translateY(0)'"
+                        >
+                            Submit Feedback
+                        </button>
+                    </form>
+
+                    <!-- Success Message (hidden by default) -->
+                    <div id="feedbackSuccess" style="display: none; margin-top: 20px; padding: 16px; background: #d4edda; border: 1px solid #c3e6cb; color: #155724; border-radius: 8px; text-align: center;">
+                        ✓ Thank you for your feedback! We appreciate your input and will review it shortly.
+                    </div>
+                </div>
+
+                <!-- Recent Feedback Stats (Optional) -->
+                <div style="margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div style="background: #f8f9fa; border-radius: 12px; padding: 20px; text-align: center;">
+                        <div style="font-size: 32px; font-weight: bold; color: #667eea;">24/7</div>
+                        <div style="color: #666; margin-top: 8px;">Available Support</div>
+                    </div>
+                    <div style="background: #f8f9fa; border-radius: 12px; padding: 20px; text-align: center;">
+                        <div style="font-size: 32px; font-weight: bold; color: #764ba2;">48hrs</div>
+                        <div style="color: #666; margin-top: 8px;">Response Time</div>
+                    </div>
+                    <div style="background: #f8f9fa; border-radius: 12px; padding: 20px; text-align: center;">
+                        <div style="font-size: 32px; font-weight: bold; color: #667eea;">100%</div>
+                        <div style="color: #666; margin-top: 8px;">Confidential</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ticket Monitoring View -->
+        <div class="view-container hidden" id="ticketsView">
+            <header class="view-header">
+                <h1 class="view-title">Ticket Monitoring Dashboard</h1>
+                <p style="color: #666; margin-top: 8px;">Monitor and manage service request tickets in real-time</p>
+            </header>
+
+            <!-- Ticket Stats Cards -->
+            <section class="metrics-section" style="margin-bottom: 30px;">
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-label">Total Tickets</div>
+                        <div class="metric-value" id="totalTicketsCount">0</div>
+                    </div>
+                    <div class="metric-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-label">Open Tickets</div>
+                        <div class="metric-value" id="openTicketsCount">0</div>
+                    </div>
+                    <div class="metric-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fd7e14" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-label">High Priority</div>
+                        <div class="metric-value" id="highPriorityCount">0</div>
+                    </div>
+                    <div class="metric-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc3545" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-label">Avg Resolution (hrs)</div>
+                        <div class="metric-value" id="avgResolutionTime">0</div>
+                    </div>
+                    <div class="metric-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#20c997" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-info">
+                        <div class="metric-label">Escalated</div>
+                        <div class="metric-value" id="escalatedCount">0</div>
+                    </div>
+                    <div class="metric-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6f42c1" stroke-width="2">
+                            <polyline points="17 11 12 6 7 11"></polyline>
+                            <polyline points="17 18 12 13 7 18"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filters Section -->
+            <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 16px 0; color: #333; font-size: 16px; font-weight: 600;">Filter Tickets</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 6px; color: #666; font-size: 13px; font-weight: 600;">Service Category</label>
+                        <select id="filterCategory" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;">
+                            <option value="All">All Categories</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 6px; color: #666; font-size: 13px; font-weight: 600;">Status</label>
+                        <select id="filterStatus" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;">
+                            <option value="All">All Statuses</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 6px; color: #666; font-size: 13px; font-weight: 600;">Priority</label>
+                        <select id="filterPriority" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;">
+                            <option value="All">All Priorities</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 6px; color: #666; font-size: 13px; font-weight: 600;">District</label>
+                        <select id="filterDistrict" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px;">
+                            <option value="All">All Districts</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="applyFiltersBtn" style="margin-top: 16px; padding: 10px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    Apply Filters
+                </button>
+                <button id="resetFiltersBtn" style="margin-top: 16px; margin-left: 10px; padding: 10px 24px; background: #6c757d; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    Reset
+                </button>
+            </div>
+
+            <!-- Tickets Table -->
+            <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 16px 0; color: #333; font-size: 16px; font-weight: 600;">Service Request Tickets</h3>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">Request ID</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">Created</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">Category</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">Sub-Category</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">Priority</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">Status</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">District</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">Area</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">Channel</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">Worker</th>
+                                <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600; color: #495057;">Resolution (hrs)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketsTableBody">
+                            <tr>
+                                <td colspan="11" style="padding: 40px; text-align: center; color: #999;">
+                                    <div class="loading-spinner" style="margin: 0 auto 16px;"></div>
+                                    <p>Loading tickets...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="/static/script.js"></script>
+    <script src="/static/chatbot.js"></script>
+    <script src="/static/metrics.js"></script>
+    <script src="/static/policy-sandbox.js"></script>
+    <script src="/static/workforce.js"></script>
+    <script src="/static/dashboard.js"></script>
+</body>
+</html>
+

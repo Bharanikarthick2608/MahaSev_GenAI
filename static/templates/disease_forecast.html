@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHREWS - Disease Outbreak Forecasting | Wildcard Platform</title>
+    
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f9fafb;
+            color: #111827;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .container-custom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+
+        .forecast-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 1rem;
+        }
+
+        .kpis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .kpi-box {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .kpi-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .insights-section {
+            display: none;
+        }
+
+        .insights-section.show {
+            display: block;
+        }
+
+        .insight-category {
+            font-weight: 600;
+            color: #667eea;
+            margin: 1rem 0 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .insight-item {
+            background: #f9fafb;
+            padding: 0.75rem 1rem;
+            border-left: 3px solid #667eea;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <a href="/dashboard" class="back-link">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+        </a>
+        <h1><i class="fas fa-chart-line me-2"></i> PHREWS: Disease Outbreak Forecasting</h1>
+        <p>AI-Powered Public Health Early Warning System using TimeGPT</p>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container-custom">
+        <!-- Overall Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Cases</div>
+                <div class="stat-value" id="statTotalCases">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Average Weekly Cases</div>
+                <div class="stat-value" id="statAvgWeekly">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Wards</div>
+                <div class="stat-value" id="statWards">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Disease Types</div>
+                <div class="stat-value" id="statDiseases">-</div>
+            </div>
+        </div>
+
+        <!-- Forecasting Section -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-chart-area me-2"></i> Disease Outbreak Forecast</h2>
+            
+            <div class="forecast-section">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label" for="seriesSelect">Select Ward-Disease Series</label>
+                            <select class="form-control" id="seriesSelect">
+                                <option value="">Loading series...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label" for="horizon">Forecast Horizon (weeks)</label>
+                            <input type="number" class="form-control" id="horizon" value="12" min="1" max="52">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="form-label" for="finetuneSteps">Fine-tune Steps</label>
+                            <input type="number" class="form-control" id="finetuneSteps" value="10" min="0" max="100">
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-primary w-100" id="runBtn" onclick="runForecast()">
+                            <i class="fas fa-play me-1"></i>Run Forecast
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="chart-container">
+                <canvas id="forecastChart"></canvas>
+            </div>
+
+            <!-- KPIs -->
+            <div class="kpis-grid" id="forecastKPIs" style="display: none;">
+                <div class="kpi-box">
+                    <div class="kpi-label">MAE</div>
+                    <div class="kpi-value" id="kpi_mae">-</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-label">RMSE</div>
+                    <div class="kpi-value" id="kpi_rmse">-</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-label">MAPE</div>
+                    <div class="kpi-value" id="kpi_mape">-</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-label">Last Week Cases</div>
+                    <div class="kpi-value" id="kpi_last">-</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-label">Avg Last 12 Weeks</div>
+                    <div class="kpi-value" id="kpi_avg12">-</div>
+                </div>
+                <div class="kpi-box">
+                    <div class="kpi-label">Forecast Average</div>
+                    <div class="kpi-value" id="kpi_forecast_avg">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Insights -->
+        <div class="card insights-section" id="insightsSection">
+            <h2 class="card-title">
+                <i class="fas fa-brain me-2"></i> AI-Generated Insights
+                <button class="btn btn-secondary float-end" id="loadInsightsBtn" onclick="loadInsights()">
+                    <i class="fas fa-brain me-1"></i>Refresh Insights
+                </button>
+            </h2>
+            <div id="insightsContent"></div>
+        </div>
+
+        <!-- Data Visualizations -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-virus me-2"></i> Disease Distribution</h2>
+                    <div class="chart-container">
+                        <canvas id="diseaseChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-map-marked-alt me-2"></i> Top Wards by Cases</h2>
+                    <div class="chart-container">
+                        <canvas id="wardChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-calendar-alt me-2"></i> Time Trends</h2>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <h2 class="card-title"><i class="fas fa-project-diagram me-2"></i> Correlations</h2>
+                    <div class="chart-container">
+                        <canvas id="correlationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/dashboard_forecast.js"></script>
+</body>
+</html>
+

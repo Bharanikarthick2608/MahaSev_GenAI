@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Wildcard Platform</title>
+    <link rel="stylesheet" href="/static/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side - Branding -->
+        <div class="login-left">
+            <div class="brand-section">
+                <a href="/" class="back-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back to Home
+                </a>
+                
+                <div class="brand-logo">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <h1>Wildcard</h1>
+                </div>
+                
+                <div class="brand-tagline">
+                    <h2>Welcome to the Future of Governance</h2>
+                    <p>Intelligent insights, real-time monitoring, and predictive analytics for modern public administration.</p>
+                </div>
+
+                <div class="brand-features">
+                    <div class="feature-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>AI-Powered Predictive Alerts</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Cross-Sectoral Intelligence</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span>Real-Time Analytics Dashboard</span>
+                    </div>
+                </div>
+
+                <div class="brand-footer">
+                    <div class="team-badge">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 6v6l4 2"></path>
+                        </svg>
+                        <span>Team EvoMind | Google Hackathon 2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Forms -->
+        <div class="login-right">
+            <div class="login-box">
+                <div class="login-header">
+                    <h2>Choose Your Access Portal</h2>
+                    <p>Select the appropriate login type to continue</p>
+                </div>
+
+                <!-- Login Type Selector -->
+                <div class="login-type-selector">
+                    <button class="type-btn" data-type="citizen" id="citizenBtn">
+                        <div class="type-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="type-content">
+                            <h3>Citizen Portal</h3>
+                            <p>Access services and submit feedback</p>
+                        </div>
+                    </button>
+
+                    <button class="type-btn active" data-type="admin" id="adminBtn">
+                        <div class="type-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <div class="type-content">
+                            <h3>Admin Dashboard</h3>
+                            <p>Full platform access and analytics</p>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Citizen Login Form -->
+                <form class="login-form hidden" id="citizenForm">
+                    <div class="form-header">
+                        <div class="form-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>Citizen Login</h3>
+                            <p>Enter your credentials to access services</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="citizenId">Citizen ID / Mobile Number</label>
+                        <div class="input-wrapper">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <input type="text" id="citizenId" placeholder="Enter your ID or mobile" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="citizenPassword">Password</label>
+                        <div class="input-wrapper">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <input type="password" id="citizenPassword" placeholder="Enter your password" required>
+                            <button type="button" class="toggle-password" data-target="citizenPassword">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="citizenRemember">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span>Sign In</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+
+                    <div class="form-footer">
+                        <p>Don't have an account? <a href="#">Register as Citizen</a></p>
+                    </div>
+                </form>
+
+                <!-- Admin Login Form -->
+                <form class="login-form" id="adminForm">
+                    <div class="form-header">
+                        <div class="form-icon admin">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3>Admin Login</h3>
+                            <p>Secure access to admin dashboard</p>
+                        </div>
+                    </div>
+
+                    <div class="security-notice">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <span>This is a secure administrative area. All actions are logged.</span>
+                    </div>
+
+                    <!-- Demo Credentials Display -->
+                    <div class="demo-credentials" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                            </svg>
+                            <h4 style="margin: 0; font-size: 16px; font-weight: 600;">Demo Credentials</h4>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.15); padding: 16px; border-radius: 8px; backdrop-filter: blur(10px);">
+                            <div style="margin-bottom: 12px;">
+                                <div style="font-size: 12px; opacity: 0.9; margin-bottom: 4px; font-weight: 500;">Email:</div>
+                                <div style="font-size: 16px; font-weight: 600; font-family: 'Courier New', monospace; background: rgba(255, 255, 255, 0.2); padding: 8px 12px; border-radius: 6px; display: inline-block; letter-spacing: 0.5px;">admin@mahaseva.gov</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; opacity: 0.9; margin-bottom: 4px; font-weight: 500;">Password:</div>
+                                <div style="font-size: 16px; font-weight: 600; font-family: 'Courier New', monospace; background: rgba(255, 255, 255, 0.2); padding: 8px 12px; border-radius: 6px; display: inline-block; letter-spacing: 0.5px;">admin123</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 12px; font-size: 12px; opacity: 0.85; display: flex; align-items: center; gap: 6px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            <span>Use these credentials to access the admin dashboard</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminEmail">Admin Email</label>
+                        <div class="input-wrapper">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <input type="email" id="adminEmail" placeholder="admin@mahaseva.gov" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminPassword">Password</label>
+                        <div class="input-wrapper">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <input type="password" id="adminPassword" placeholder="Enter password (admin123)" required>
+                            <button type="button" class="toggle-password" data-target="adminPassword">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="adminRemember">
+                            <span>Trust this device</span>
+                        </label>
+                        <a href="#" class="forgot-link">Need Help?</a>
+                    </div>
+
+                    <button type="submit" class="submit-btn admin">
+                        <span>Login</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+
+                    <div class="form-footer">
+                        <p>Authorized personnel only</p>
+                    </div>
+                </form>
+            </div>
+
+            <div class="login-footer-info">
+                <p>Protected by enterprise-grade security | All activities are monitored</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/login.js"></script>
+</body>
+</html>
+

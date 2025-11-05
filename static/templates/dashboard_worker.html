@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workforce & Resource Allocation Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-blue: #0066cc;
+            --secondary-blue: #004499;
+            --success-green: #28a745;
+            --warning-yellow: #ffc107;
+            --danger-red: #dc3545;
+            --light-blue: #e3f2fd;
+            --dark-blue: #003366;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .dashboard-header .filter-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .metric-card.deployed {
+            border-left-color: var(--danger-red);
+        }
+
+        .metric-card.shortfall {
+            border-left-color: var(--warning-yellow);
+        }
+
+        .metric-card.availability {
+            border-left-color: var(--success-green);
+        }
+
+        .metric-card.time {
+            border-left-color: #6c757d;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            color: var(--primary-blue);
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-icon {
+            font-size: 2.5rem;
+            opacity: 0.2;
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+        }
+
+        .capacity-breakdown {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-blue);
+        }
+
+        .role-item {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--light-blue);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .role-name {
+            font-weight: 600;
+            color: var(--dark-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-custom {
+            height: 25px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-green) 0%, #20c997 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 0.5rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .district-table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .table thead th {
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--light-blue);
+        }
+
+        .badge-custom {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .badge-yes {
+            background-color: var(--danger-red);
+            color: white;
+        }
+
+        .badge-no {
+            background-color: var(--success-green);
+            color: white;
+        }
+
+        .btn-view {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-view:hover {
+            background-color: var(--secondary-blue);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--danger-red);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .metric-card-wrapper {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-users-cog me-2"></i>Workforce & Resource Allocation Dashboard</h1>
+                </div>
+                <div class="col-md-4">
+                    <div class="filter-section">
+                        <label for="districtFilter" class="form-label mb-0">Filter by District:</label>
+                        <select id="districtFilter" class="form-select">
+                            <option value="all">All Districts</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Main Capacity Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="metric-card metric-card-wrapper deployed">
+                    <div class="metric-icon"><i class="fas fa-user-check"></i></div>
+                    <div class="metric-label">Total Deployed Personnel</div>
+                    <div class="metric-value" id="totalDeployed">-</div>
+                    <small class="text-muted">Currently addressing active alerts</small>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="metric-card metric-card-wrapper shortfall">
+                    <div class="metric-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="metric-label">Critical Shortfall Alerts</div>
+                    <div class="metric-value" id="criticalShortfall">-</div>
+                    <small class="text-muted">Areas below safety threshold</small>
+                    <span class="alert-badge" id="shortfallBadge" style="display: none;">!</span>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="metric-card metric-card-wrapper availability">
+                    <div class="metric-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="metric-label">Highest Availability (Role)</div>
+                    <div class="metric-value" id="highestAvailability">-</div>
+                    <small class="text-muted">Category with most available staff</small>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="metric-card metric-card-wrapper time">
+                    <div class="metric-icon"><i class="fas fa-clock"></i></div>
+                    <div class="metric-label">Average Deployment Time</div>
+                    <div class="metric-value" id="avgDeploymentTime">-</div>
+                    <small class="text-muted">From alert to deployment</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Role-Wise Capacity Breakdown -->
+        <div class="capacity-breakdown">
+            <h2 class="section-title"><i class="fas fa-chart-bar me-2"></i>Role-Wise Capacity Breakdown</h2>
+            <div id="roleBreakdown">
+                <div class="text-center py-5">
+                    <div class="loading-spinner"></div>
+                    <p class="mt-2 text-muted">Loading capacity data...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- District Deployment Status -->
+        <div class="district-table-container">
+            <h2 class="section-title"><i class="fas fa-map-marked-alt me-2"></i>Real-time District Resource Summary</h2>
+            <div class="mb-3">
+                <input type="text" id="searchTable" class="form-control" placeholder="Search districts...">
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover" id="districtTable">
+                    <thead>
+                        <tr>
+                            <th>District</th>
+                            <th>Active Alerts</th>
+                            <th>Total Available Workforce</th>
+                            <th>Health Staff Used (%)</th>
+                            <th>Police/Safety Shortfall</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="districtTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <div class="loading-spinner"></div>
+                                <p class="mt-2 text-muted">Loading district data...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let currentDistrict = 'all';
+        let allDistricts = [];
+        let allRoleData = [];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDistricts();
+            loadMetrics();
+            loadCapacitySummary();
+            loadDistrictSummary();
+            
+            // Setup district filter
+            document.getElementById('districtFilter').addEventListener('change', function(e) {
+                currentDistrict = e.target.value;
+                loadCapacitySummary();
+                loadDistrictSummary();
+            });
+
+            // Setup table search
+            document.getElementById('searchTable').addEventListener('input', function(e) {
+                filterTable(e.target.value);
+            });
+        });
+
+        // Load list of districts
+        async function loadDistricts() {
+            try {
+                const response = await fetch(`${API_BASE}/api/capacity/districts`);
+                const data = await response.json();
+                allDistricts = data.districts;
+                
+                const select = document.getElementById('districtFilter');
+                select.innerHTML = '<option value="all">All Districts</option>';
+                allDistricts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading districts:', error);
+            }
+        }
+
+        // Load main metrics
+        async function loadMetrics() {
+            try {
+                const response = await fetch(`${API_BASE}/api/capacity/metrics`);
+                const data = await response.json();
+                
+                document.getElementById('totalDeployed').textContent = formatNumber(data.total_deployed);
+                document.getElementById('criticalShortfall').textContent = data.critical_shortfall_alerts;
+                
+                // Show badge if shortfall exists
+                const badge = document.getElementById('shortfallBadge');
+                if (data.critical_shortfall_alerts > 0) {
+                    badge.style.display = 'flex';
+                    badge.textContent = data.critical_shortfall_alerts;
+                } else {
+                    badge.style.display = 'none';
+                }
+                
+                document.getElementById('highestAvailability').textContent = data.highest_availability_role;
+                
+                // Format deployment time
+                const hours = Math.floor(data.average_deployment_time_hours);
+                const minutes = Math.round((data.average_deployment_time_hours - hours) * 60);
+                document.getElementById('avgDeploymentTime').textContent = 
+                    `${hours} hr ${minutes} min`;
+            } catch (error) {
+                console.error('Error loading metrics:', error);
+            }
+        }
+
+        // Load capacity summary
+        async function loadCapacitySummary() {
+            try {
+                const response = await fetch(`${API_BASE}/api/capacity/summary`);
+                const data = await response.json();
+                
+                allRoleData = data.Top_Categories;
+                renderRoleBreakdown(data.Top_Categories);
+            } catch (error) {
+                console.error('Error loading capacity summary:', error);
+                document.getElementById('roleBreakdown').innerHTML = 
+                    '<div class="alert alert-danger">Error loading capacity data</div>';
+            }
+        }
+
+        // Render role breakdown
+        function renderRoleBreakdown(categories) {
+            const container = document.getElementById('roleBreakdown');
+            container.innerHTML = '';
+            
+            if (currentDistrict !== 'all') {
+                // Filter by district
+                loadDistrictDetails(currentDistrict).then(districtData => {
+                    renderDistrictRoles(container, districtData);
+                });
+            } else {
+                // Show all categories
+                categories.forEach(category => {
+                    const roleDiv = document.createElement('div');
+                    roleDiv.className = 'role-item';
+                    
+                    const availablePct = category.total > 0 ? 
+                        Math.round((category.available / category.total) * 100) : 0;
+                    const deployedPct = category.total > 0 ? 
+                        Math.round((category.deployed / category.total) * 100) : 0;
+                    
+                    roleDiv.innerHTML = `
+                        <div class="role-name">${category.role}</div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Available: <strong>${formatNumber(category.available)}</strong> / ${formatNumber(category.total)}</span>
+                            <span>Deployed: <strong>${formatNumber(category.deployed)}</strong></span>
+                        </div>
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" style="width: ${availablePct}%">
+                                ${availablePct}%
+                            </div>
+                        </div>
+                        <small class="text-muted mt-1 d-block">Availability Rate: ${availablePct}%</small>
+                    `;
+                    container.appendChild(roleDiv);
+                });
+            }
+        }
+
+        // Load district details
+        async function loadDistrictDetails(districtName) {
+            try {
+                const response = await fetch(`${API_BASE}/api/capacity/district/${encodeURIComponent(districtName)}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error loading district details:', error);
+                return [];
+            }
+        }
+
+        // Render district-specific roles
+        function renderDistrictRoles(container, districtData) {
+            districtData.forEach(role => {
+                const roleDiv = document.createElement('div');
+                roleDiv.className = 'role-item';
+                
+                const availablePct = role.total > 0 ? 
+                    Math.round((role.available / role.total) * 100) : 0;
+                
+                roleDiv.innerHTML = `
+                    <div class="role-name">${role.role}</div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Available: <strong>${formatNumber(role.available)}</strong> / ${formatNumber(role.total)}</span>
+                        <span>Deployed: <strong>${formatNumber(role.deployed)}</strong></span>
+                    </div>
+                    <div class="progress-bar-custom">
+                        <div class="progress-fill" style="width: ${availablePct}%">
+                            ${availablePct}%
+                        </div>
+                    </div>
+                    <small class="text-muted mt-1 d-block">Availability Rate: ${availablePct}%</small>
+                `;
+                container.appendChild(roleDiv);
+            });
+        }
+
+        // Load district summary table
+        async function loadDistrictSummary() {
+            try {
+                const response = await fetch(`${API_BASE}/api/capacity/district-summary`);
+                const data = await response.json();
+                
+                renderDistrictTable(data);
+            } catch (error) {
+                console.error('Error loading district summary:', error);
+                document.getElementById('districtTableBody').innerHTML = 
+                    '<tr><td colspan="6" class="text-center text-danger">Error loading district data</td></tr>';
+            }
+        }
+
+        // Render district table
+        function renderDistrictTable(districts) {
+            const tbody = document.getElementById('districtTableBody');
+            tbody.innerHTML = '';
+            
+            districts.forEach(district => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-district', district.district.toLowerCase());
+                
+                const shortfallBadge = district.police_safety_shortfall ? 
+                    '<span class="badge badge-custom badge-yes">Yes</span>' : 
+                    '<span class="badge badge-custom badge-no">No</span>';
+                
+                row.innerHTML = `
+                    <td><strong>${district.district}</strong></td>
+                    <td><span class="badge bg-warning text-dark">${district.active_alerts}</span></td>
+                    <td>${formatNumber(district.total_available_workforce)}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="progress me-2" style="width: 100px; height: 20px;">
+                                <div class="progress-bar bg-warning" role="progressbar" 
+                                     style="width: ${district.health_staff_used_pct}%">
+                                </div>
+                            </div>
+                            <span>${district.health_staff_used_pct}%</span>
+                        </div>
+                    </td>
+                    <td>${shortfallBadge}</td>
+                    <td>
+                        <button class="btn btn-view btn-sm" onclick="viewDistrictDetails('${district.district}')">
+                            View Deployment
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Filter table
+        function filterTable(searchTerm) {
+            const rows = document.querySelectorAll('#districtTableBody tr');
+            const term = searchTerm.toLowerCase();
+            
+            rows.forEach(row => {
+                const district = row.getAttribute('data-district');
+                if (district && district.includes(term)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // View district details
+        function viewDistrictDetails(districtName) {
+            // Set filter to this district
+            document.getElementById('districtFilter').value = districtName;
+            currentDistrict = districtName;
+            loadCapacitySummary();
+            
+            // Scroll to role breakdown
+            document.getElementById('roleBreakdown').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Format numbers with commas
+        function formatNumber(num) {
+            return new Intl.NumberFormat('en-US').format(num);
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            loadMetrics();
+            if (currentDistrict === 'all') {
+                loadCapacitySummary();
+            }
+            loadDistrictSummary();
+        }, 30000);
+    </script>
+</body>
+</html>
+

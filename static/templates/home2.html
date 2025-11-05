@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maharashtra Government Citizen Service Portal</title>
+    <link rel="icon" type="image/x-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Maharashtra-gov-logo.png/200px-Maharashtra-gov-logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Maharashtra Government theme color palette */
+        :root {
+            --primary-color: #0066CC;
+            --secondary-color: #FF9933;
+            --accent-color: #138808;
+            --background-color: #F5F5F5;
+            --text-color: #1a1a1a;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        .full-width-header {
+            background: linear-gradient(to right, #0066CC, #004C99);
+            color: white;
+            padding: 1rem 0;
+            line-height: 40px;
+        }
+
+        .full-width-header a {
+            color: white;
+            margin: 0 0.75rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .full-width-header a:hover {
+            color: #FFD700;
+        }
+
+        .header-logo {
+            max-height: 40px;
+            margin-right: 1rem;
+            border-radius: 10px;
+        }
+
+        .language-buttons .lang-button {
+            border: 1px solid white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            transition: all 0.3s ease;
+            line-height: 30px;
+        }
+
+        .language-buttons .lang-button.lang-active {
+            background-color: #EA4335;
+            color: white;
+        }
+
+        .social-icons-container {
+            background-color: #ffffff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            line-height: 40px;
+        }
+        
+        .social-icons a {
+            color: #0066CC;
+            margin: 0 0.25rem;
+            transition: transform 0.2s ease;
+        }
+        
+        .social-icons a:hover {
+            transform: scale(1.2);
+        }
+
+        footer {
+            width: 100%;
+            margin: 0;
+            padding: 2rem 0;
+            background: linear-gradient(to right, #0066CC, #004C99);
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .service-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .service-button:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Full-Width Header -->
+    <div class="full-width-header">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Maharashtra-gov-logo.png/200px-Maharashtra-gov-logo.png" alt="Maharashtra Government Logo" class="header-logo" style="max-height: 40px; margin-right: 1rem;">
+            </div>
+            
+
+            
+            <div class="flex items-center space-x-4">
+                <div class="social-icons-container">
+                    <div class="social-icons flex">
+                        <a href="https://www.facebook.com/gouvernementbenin" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.twitter.com/gouvernementben" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.youtube.com/gouvernementbenin" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="https://www.flickr.com/gouvernementbenin" target="_blank"><i class="fab fa-flickr"></i></a>
+                    </div>
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto max-w-5xl p-4 text-center">
+        <h1 id="main-title" class="text-3xl font-bold my-8">Welcome to Citizen Services Portal</h1>
+        <div class="flex justify-center space-x-4">
+            <a href="/multilingual_bot">
+                <button class="service-button">
+                    <i class="fas fa-comment-dots mr-2"></i>Chat Assistant
+                </button>
+            </a>
+            <a href="/new_login">
+                <button class="service-button">
+                    <i class="fas fa-user-shield mr-2"></i>Admin Portal
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-4 text-center text-white text-sm">
+        
+        <div class="border-t border-gray-700 pt-4 flex justify-between items-center">
+            <p class="text-gray-400" id="copyright">© All Rights Reserved - 2025</p>
+            <div class="footer-links">
+                <a href="#" id="legal-notices">Legal notices and cookie management</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        // Language content dictionary
+        const languageContent = {
+            en: {
+                title: "Citizen Services Portal",
+                mainTitle: "Welcome to Citizen Services Portal",
+                chatButton: "Chat Assistant",
+                adminButton: "Admin Portal",
+                headerMenu: [
+                    "Government", "Publications", "Opportunities", "Events", 
+                    "Benin", "Coronavirus"
+                ],
+                footerSections: {
+                    government: {
+                        title: "Government",
+                        links: [
+                            "Action Program", "Members of the government", 
+                            "All ministries", "Platforms and e-services"
+                        ]
+                    },
+                    publications: {
+                        title: "Publications",
+                        links: ["News", "Videos", "Documents"]
+                    },
+                    opportunities: {
+                        title: "Opportunities",
+                        links: ["Job offers", "Public markets"]
+                    },
+                    benin: {
+                        title: "Benin",
+                        links: [
+                            "History", "The coat of arms", "The national anthem", 
+                            "Geography", "Communes of Benin", "Attractions and monuments"
+                        ]
+                    },
+                    copyright: "© Presidency of the Republic of Benin - 2023",
+                    legalNotices: "Legal notices and cookie management"
+                }
+            },
+            fr: {
+                title: "Portail des Services du Bénin",
+                mainTitle: "Bienvenue sur le Portail des Services du Bénin",
+                chatButton: "Assistant de Chat",
+                adminButton: "Portail Admin",
+                headerMenu: [
+                    "Gouvernement", "Publications", "Opportunités", "Événements", 
+                    "Bénin", "Coronavirus"
+                ],
+                footerSections: {
+                    government: {
+                        title: "Gouvernement",
+                        links: [
+                            "Programme d'action", "Membres du gouvernement", 
+                            "Tous les ministères", "Plateformes et services en ligne"
+                        ]
+                    },
+                    publications: {
+                        title: "Publications",
+                        links: ["Actualités", "Vidéos", "Documents"]
+                    },
+                    opportunities: {
+                        title: "Opportunités",
+                        links: ["Offres d'emploi", "Marchés publics"]
+                    },
+                    benin: {
+                        title: "Bénin",
+                        links: [
+                            "Histoire", "Armoiries", "Hymne national", 
+                            "Géographie", "Communes du Bénin", "Attractions et monuments"
+                        ]
+                    },
+                    copyright: "© Présidence de la République du Bénin - 2023",
+                    legalNotices: "Mentions légales et gestion des cookies"
+                }
+            }
+        };
+
+        let currentLanguage = 'en'; // Default language to English
+
+        // Language switching functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const enLangButton = document.getElementById('enLangButton');
+            const frLangButton = document.getElementById('frLangButton');
+
+            function updateLanguage(lang) {
+                currentLanguage = lang;
+                
+                // Update page title
+                document.title = languageContent[lang].title;
+
+                // Update main title
+                document.getElementById('main-title').textContent = languageContent[lang].mainTitle;
+
+                // Update buttons
+                const buttons = document.querySelectorAll('.service-button');
+                buttons[0].innerHTML = `<i class="fas fa-comment-dots mr-2"></i>${languageContent[lang].chatButton}`;
+                buttons[1].innerHTML = `<i class="fas fa-user-shield mr-2"></i>${languageContent[lang].adminButton}`;
+
+                // Update header menu
+                const headerMenu = document.getElementById('header-menu');
+                headerMenu.innerHTML = languageContent[lang].headerMenu
+                    .map(item => `<a href="#" class="hover:text-gray-300">${item}</a>`)
+                    .join('');
+
+                // Update header logo title
+                document.getElementById('header-title').textContent = 
+                    lang === 'en' 
+                    ? 'GOVERNMENT OF THE REPUBLIC OF BENIN' 
+                    : 'GOUVERNEMENT DE LA RÉPUBLIQUE DU BÉNIN';
+
+                // Update footer sections
+                const sections = ['government', 'publications', 'opportunities', 'benin'];
+                sections.forEach(section => {
+                    document.getElementById(`${section}-title`).textContent = 
+                        languageContent[lang].footerSections[section].title;
+                    
+                    const linksContainer = document.getElementById(`${section}-links`);
+                    linksContainer.innerHTML = languageContent[lang].footerSections[section].links
+                        .map(link => `<p>${link}</p>`)
+                        .join('');
+                });
+
+                // Update copyright and legal notices
+                document.getElementById('copyright').textContent = 
+                    languageContent[lang].footerSections.copyright;
+                document.getElementById('legal-notices').textContent = 
+                    languageContent[lang].footerSections.legalNotices;
+
+                // Update language button states
+                enLangButton.classList.toggle('lang-active', lang === 'en');
+                frLangButton.classList.toggle('lang-active', lang === 'fr');
+            }
+
+            // Initial language setup
+            updateLanguage('en');
+
+            // Event listeners for language buttons
+            enLangButton.addEventListener('click', () => updateLanguage('en'));
+            frLangButton.addEventListener('click', () => updateLanguage('fr'));
+        });
+    </script>
+</body>
+</html>
