@@ -38,10 +38,9 @@ except ImportError as e:
     logging.warning(f"Forecasting utilities not available: {e}")
     FORECAST_AVAILABLE = False
 
-# Import Azure OpenAI and Speech SDK for multilingual chatbot
+# Import Azure OpenAI for multilingual chatbot
 try:
     import openai
-    import azure.cognitiveservices.speech as speechsdk
     MULTILINGUAL_AVAILABLE = True
 except ImportError as e:
     logging.warning(f"Multilingual chatbot dependencies not available: {e}")
@@ -78,10 +77,6 @@ LLM_API_ENDPOINT = os.getenv("LLM_API_ENDPOINT")
 LLM_API_KEY = os.getenv("LLM_API_KEY")
 LLM_API_VERSION = os.getenv("LLM_API_VERSION", "2024-05-01-preview")
 LLM_DEPLOYMENT_NAME = os.getenv("LLM_DEPLOYMENT_NAME")
-
-# Speech Service Configuration
-SPEECH_SERVICE_API_KEY = os.getenv("SPEECH_SERVICE_API_KEY")
-SPEECH_SERVICE_REGION = os.getenv("SPEECH_SERVICE_REGION")
 
 # Email configuration
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
@@ -1489,43 +1484,6 @@ async def get_ticket_stats():
 
 # ===================== MULTILINGUAL CHATBOT FUNCTIONS =====================
 
-def text_to_speech(text, language='en', voice_code=None):
-    """Convert text to speech using Azure Speech Services"""
-    if not MULTILINGUAL_AVAILABLE or not SPEECH_SERVICE_API_KEY:
-        return None
-        
-    try:
-        speech_config = speechsdk.SpeechConfig(
-            subscription=SPEECH_SERVICE_API_KEY, 
-            region=SPEECH_SERVICE_REGION
-        )
-        
-        # Use provided voice_code or default to English
-        if voice_code is None:
-            voice_code = 'en-US-JennyNeural'
-        
-        speech_config.speech_synthesis_voice_name = voice_code
-        
-        filename = f"response_{uuid.uuid4()}.wav"
-        file_path = os.path.join('static', 'audio', filename)
-        audio_config = speechsdk.audio.AudioOutputConfig(filename=file_path)
-        
-        synthesizer = speechsdk.SpeechSynthesizer(
-            speech_config=speech_config, 
-            audio_config=audio_config
-        )
-        
-        result = synthesizer.speak_text_async(text).get()
-        
-        if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
-            return f"/static/audio/{filename}"
-        return None
-            
-    except Exception as e:
-        logger.error(f"Text-to-speech error: {e}")
-        return None
-
-
 def create_new_ticket_multilingual(data):
     """Create a new service request ticket from multilingual chatbot"""
     from database.connection import get_db_connection as get_db_conn
@@ -1761,70 +1719,18 @@ The JSON must be in English only. Tell the user the issue will be resolved in 2-
                         json_data
                     )
         
-        # Generate audio if requested
-        audio_path = None
-        if data.get('generate_audio', False):
-            audio_path = text_to_speech(final_response.replace("*","").replace("\n",""), detected_language, voice_code)
-        
         conversation_history.append({"role": "assistant", "content": assistant_response})
         
         is_arabic = detected_language == 'ar'
         
         return JSONResponse({
             "response": final_response,
-            "audio_path": audio_path,
             "conversation_history": conversation_history,
             "is_arabic": is_arabic
         })
     
     except Exception as e:
         logger.error(f"Error processing chat: {e}")
-        return JSONResponse({"error": str(e)}, status_code=500)
-
-
-@app.post('/api/speech-to-text')
-async def speech_to_text(request: Request):
-    """Convert speech to text using Azure Speech Services"""
-    if not MULTILINGUAL_AVAILABLE or not SPEECH_SERVICE_API_KEY:
-        return JSONResponse(
-            {"error": "Speech-to-text not available"}, 
-            status_code=503
-        )
-    
-    try:
-        audio_data = await request.body()
-        if not audio_data:
-            return JSONResponse({"error": "No audio data provided"}, status_code=400)
-        
-        speech_config = speechsdk.SpeechConfig(
-            subscription=SPEECH_SERVICE_API_KEY, 
-            region=SPEECH_SERVICE_REGION
-        )
-        
-        auto_detect_config = speechsdk.languageconfig.AutoDetectSourceLanguageConfig(
-            languages=["en-US", "ar-AE", "hi-IN", "es-ES", "fr-FR"]
-        )
-        
-        push_stream = speechsdk.audio.PushAudioInputStream()
-        audio_config = speechsdk.audio.AudioConfig(stream=push_stream)
-        
-        speech_recognizer = speechsdk.SpeechRecognizer(
-            speech_config=speech_config,
-            audio_config=audio_config,
-            auto_detect_source_language_config=auto_detect_config
-        )
-        
-        push_stream.write(audio_data)
-        push_stream.close()
-        
-        result = speech_recognizer.recognize_once_async().get()
-        
-        if result.reason == speechsdk.ResultReason.RecognizedSpeech:
-            return JSONResponse({"text": result.text})
-        return JSONResponse({"error": "Speech not recognized"}, status_code=400)
-        
-    except Exception as e:
-        logger.error(f"Speech recognition error: {e}")
         return JSONResponse({"error": str(e)}, status_code=500)
 
 

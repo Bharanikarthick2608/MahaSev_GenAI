@@ -17,7 +17,6 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from functools import wraps
 from typing import Optional
-import azure.cognitiveservices.speech as speechsdk
 import pandas as pd
 
 # Import model utilities for forecasting
@@ -118,10 +117,6 @@ LLM_API_ENDPOINT = os.getenv("LLM_API_ENDPOINT")
 LLM_API_KEY = os.getenv("LLM_API_KEY")
 LLM_API_VERSION = os.getenv("LLM_API_VERSION", "2024-05-01-preview")
 LLM_DEPLOYMENT_NAME = os.getenv("LLM_DEPLOYMENT_NAME")
-
-# Speech Service Configuration (Generic names)
-SPEECH_SERVICE_API_KEY = os.getenv("SPEECH_SERVICE_API_KEY")
-SPEECH_SERVICE_REGION = os.getenv("SPEECH_SERVICE_REGION")
 
 # Email configuration
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
@@ -434,11 +429,6 @@ Follow this conversation flow to collect information:
                         json_data
                     )
 
-        # Generate audio response if needed
-        audio_path = None
-        if data.get('generate_audio', False):
-            audio_path = text_to_speech(final_response.replace("*","").replace("\n",""), detected_language, voice_code)  # Use selected voice
-
         # Append the assistant's response to the conversation history
         conversation_history.append({"role": "assistant", "content": assistant_response})
 
@@ -447,7 +437,6 @@ Follow this conversation flow to collect information:
 
         return JSONResponse({
             "response": final_response,
-            "audio_path": audio_path,
             "conversation_history": conversation_history,
             "is_arabic": is_arabic
         })
@@ -620,84 +609,6 @@ def send_confirmation_email(to_email, ticket_id, ticket_data):
     except Exception as e:
         print(f"Failed to send confirmation email: {e}")
         return False
-
-@app.post('/api/speech-to-text')
-async def speech_to_text(request: Request):
-    try:
-        audio_data = await request.body()
-        if not audio_data:
-            return JSONResponse({"error": "No audio data provided"}, status_code=400)
-
-        # Configure speech recognition
-        speech_config = speechsdk.SpeechConfig(
-            subscription=SPEECH_SERVICE_API_KEY, 
-            region=SPEECH_SERVICE_REGION
-        )
-        
-        auto_detect_source_language_config = speechsdk.languageconfig.AutoDetectSourceLanguageConfig(
-            languages=["en-US", "fr-FR"]
-        )
-
-        # Create push stream
-        push_stream = speechsdk.audio.PushAudioInputStream()
-        audio_config = speechsdk.audio.AudioConfig(stream=push_stream)
-
-        speech_recognizer = speechsdk.SpeechRecognizer(
-            speech_config=speech_config,
-            audio_config=audio_config,
-            auto_detect_source_language_config=auto_detect_source_language_config
-        )
-
-        # Write audio data to stream
-        push_stream.write(audio_data)
-        push_stream.close()
-
-        result = speech_recognizer.recognize_once_async().get()
-        
-        if result.reason == speechsdk.ResultReason.RecognizedSpeech:
-            return JSONResponse({"text": result.text})
-        return JSONResponse({"error": "Speech not recognized"}, status_code=400)
-
-    except Exception as e:
-        print(f"Speech recognition error: {e}")
-        return JSONResponse({"error": str(e)}, status_code=500)
-
-def text_to_speech(text, language='en', voice_code=None):
-    try:
-        speech_config = speechsdk.SpeechConfig(
-            subscription=SPEECH_SERVICE_API_KEY, 
-            region=SPEECH_SERVICE_REGION
-        )
-        
-        # Use provided voice_code or default to English
-        if voice_code is None:
-            voice_code = 'en-US-JennyNeural'
-        
-        speech_config.speech_synthesis_voice_name = voice_code
-        
-        # Debugging output
-        print(f"Text to synthesize: {text} (Language: {language}, Voice: {voice_code})")
-        
-        filename = f"response_{uuid.uuid4()}.wav"
-        file_path = os.path.join(BASE_DIR, 'static/audio', filename)
-        audio_config = speechsdk.audio.AudioOutputConfig(filename=file_path)
-        
-        synthesizer = speechsdk.SpeechSynthesizer(
-            speech_config=speech_config, 
-            audio_config=audio_config
-        )
-        
-        result = synthesizer.speak_text_async(text).get()
-        
-        if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
-            return f"/static/audio/{filename}"
-        return None
-            
-    except Exception as e:
-        print(f"Text-to-speech error: {e}")
-        return None
-
-
 
 # Predefined agents for each category
 AGENTS_BY_CATEGORY = {
